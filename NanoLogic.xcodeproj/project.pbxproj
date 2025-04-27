@@ -1,0 +1,563 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXContainerItemProxy section */
+		A9EA66D02DBE7C780054B3F6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A9EA66BA2DBE7C770054B3F6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A9EA66C12DBE7C770054B3F6;
+			remoteInfo = NanoLogic;
+		};
+		A9EA66DA2DBE7C780054B3F6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A9EA66BA2DBE7C770054B3F6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A9EA66C12DBE7C770054B3F6;
+			remoteInfo = NanoLogic;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		A9EA66C22DBE7C770054B3F6 /* NanoLogic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NanoLogic.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A9EA66CF2DBE7C780054B3F6 /* NanoLogicTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NanoLogicTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A9EA66D92DBE7C780054B3F6 /* NanoLogicUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NanoLogicUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		A9EA66C42DBE7C770054B3F6 /* NanoLogic */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = NanoLogic;
+			sourceTree = "<group>";
+		};
+		A9EA66D22DBE7C780054B3F6 /* NanoLogicTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = NanoLogicTests;
+			sourceTree = "<group>";
+		};
+		A9EA66DC2DBE7C780054B3F6 /* NanoLogicUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = NanoLogicUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A9EA66BF2DBE7C770054B3F6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A9EA66CC2DBE7C780054B3F6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A9EA66D62DBE7C780054B3F6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A9EA66B92DBE7C770054B3F6 = {
+			isa = PBXGroup;
+			children = (
+				A9EA66C42DBE7C770054B3F6 /* NanoLogic */,
+				A9EA66D22DBE7C780054B3F6 /* NanoLogicTests */,
+				A9EA66DC2DBE7C780054B3F6 /* NanoLogicUITests */,
+				A9EA66C32DBE7C770054B3F6 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A9EA66C32DBE7C770054B3F6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A9EA66C22DBE7C770054B3F6 /* NanoLogic.app */,
+				A9EA66CF2DBE7C780054B3F6 /* NanoLogicTests.xctest */,
+				A9EA66D92DBE7C780054B3F6 /* NanoLogicUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A9EA66C12DBE7C770054B3F6 /* NanoLogic */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A9EA66E32DBE7C780054B3F6 /* Build configuration list for PBXNativeTarget "NanoLogic" */;
+			buildPhases = (
+				A9EA66BE2DBE7C770054B3F6 /* Sources */,
+				A9EA66BF2DBE7C770054B3F6 /* Frameworks */,
+				A9EA66C02DBE7C770054B3F6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				A9EA66C42DBE7C770054B3F6 /* NanoLogic */,
+			);
+			name = NanoLogic;
+			packageProductDependencies = (
+			);
+			productName = NanoLogic;
+			productReference = A9EA66C22DBE7C770054B3F6 /* NanoLogic.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A9EA66CE2DBE7C780054B3F6 /* NanoLogicTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A9EA66E62DBE7C780054B3F6 /* Build configuration list for PBXNativeTarget "NanoLogicTests" */;
+			buildPhases = (
+				A9EA66CB2DBE7C780054B3F6 /* Sources */,
+				A9EA66CC2DBE7C780054B3F6 /* Frameworks */,
+				A9EA66CD2DBE7C780054B3F6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A9EA66D12DBE7C780054B3F6 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				A9EA66D22DBE7C780054B3F6 /* NanoLogicTests */,
+			);
+			name = NanoLogicTests;
+			packageProductDependencies = (
+			);
+			productName = NanoLogicTests;
+			productReference = A9EA66CF2DBE7C780054B3F6 /* NanoLogicTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		A9EA66D82DBE7C780054B3F6 /* NanoLogicUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A9EA66E92DBE7C780054B3F6 /* Build configuration list for PBXNativeTarget "NanoLogicUITests" */;
+			buildPhases = (
+				A9EA66D52DBE7C780054B3F6 /* Sources */,
+				A9EA66D62DBE7C780054B3F6 /* Frameworks */,
+				A9EA66D72DBE7C780054B3F6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A9EA66DB2DBE7C780054B3F6 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				A9EA66DC2DBE7C780054B3F6 /* NanoLogicUITests */,
+			);
+			name = NanoLogicUITests;
+			packageProductDependencies = (
+			);
+			productName = NanoLogicUITests;
+			productReference = A9EA66D92DBE7C780054B3F6 /* NanoLogicUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A9EA66BA2DBE7C770054B3F6 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1630;
+				LastUpgradeCheck = 1630;
+				TargetAttributes = {
+					A9EA66C12DBE7C770054B3F6 = {
+						CreatedOnToolsVersion = 16.3;
+					};
+					A9EA66CE2DBE7C780054B3F6 = {
+						CreatedOnToolsVersion = 16.3;
+						TestTargetID = A9EA66C12DBE7C770054B3F6;
+					};
+					A9EA66D82DBE7C780054B3F6 = {
+						CreatedOnToolsVersion = 16.3;
+						TestTargetID = A9EA66C12DBE7C770054B3F6;
+					};
+				};
+			};
+			buildConfigurationList = A9EA66BD2DBE7C770054B3F6 /* Build configuration list for PBXProject "NanoLogic" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A9EA66B92DBE7C770054B3F6;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = A9EA66C32DBE7C770054B3F6 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A9EA66C12DBE7C770054B3F6 /* NanoLogic */,
+				A9EA66CE2DBE7C780054B3F6 /* NanoLogicTests */,
+				A9EA66D82DBE7C780054B3F6 /* NanoLogicUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A9EA66C02DBE7C770054B3F6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A9EA66CD2DBE7C780054B3F6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A9EA66D72DBE7C780054B3F6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A9EA66BE2DBE7C770054B3F6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A9EA66CB2DBE7C780054B3F6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A9EA66D52DBE7C780054B3F6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A9EA66D12DBE7C780054B3F6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A9EA66C12DBE7C770054B3F6 /* NanoLogic */;
+			targetProxy = A9EA66D02DBE7C780054B3F6 /* PBXContainerItemProxy */;
+		};
+		A9EA66DB2DBE7C780054B3F6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A9EA66C12DBE7C770054B3F6 /* NanoLogic */;
+			targetProxy = A9EA66DA2DBE7C780054B3F6 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		A9EA66E12DBE7C780054B3F6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 7H7DKCQF8G;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		A9EA66E22DBE7C780054B3F6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 7H7DKCQF8G;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A9EA66E42DBE7C780054B3F6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7H7DKCQF8G;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.drewniok.NanoLogic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A9EA66E52DBE7C780054B3F6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7H7DKCQF8G;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.drewniok.NanoLogic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		A9EA66E72DBE7C780054B3F6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7H7DKCQF8G;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.drewniok.NanoLogicTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NanoLogic.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/NanoLogic";
+			};
+			name = Debug;
+		};
+		A9EA66E82DBE7C780054B3F6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7H7DKCQF8G;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.drewniok.NanoLogicTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NanoLogic.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/NanoLogic";
+			};
+			name = Release;
+		};
+		A9EA66EA2DBE7C780054B3F6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7H7DKCQF8G;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.drewniok.NanoLogicUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = NanoLogic;
+			};
+			name = Debug;
+		};
+		A9EA66EB2DBE7C780054B3F6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7H7DKCQF8G;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.drewniok.NanoLogicUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = NanoLogic;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A9EA66BD2DBE7C770054B3F6 /* Build configuration list for PBXProject "NanoLogic" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A9EA66E12DBE7C780054B3F6 /* Debug */,
+				A9EA66E22DBE7C780054B3F6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A9EA66E32DBE7C780054B3F6 /* Build configuration list for PBXNativeTarget "NanoLogic" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A9EA66E42DBE7C780054B3F6 /* Debug */,
+				A9EA66E52DBE7C780054B3F6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A9EA66E62DBE7C780054B3F6 /* Build configuration list for PBXNativeTarget "NanoLogicTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A9EA66E72DBE7C780054B3F6 /* Debug */,
+				A9EA66E82DBE7C780054B3F6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A9EA66E92DBE7C780054B3F6 /* Build configuration list for PBXNativeTarget "NanoLogicUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A9EA66EA2DBE7C780054B3F6 /* Debug */,
+				A9EA66EB2DBE7C780054B3F6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A9EA66BA2DBE7C770054B3F6 /* Project object */;
+}
