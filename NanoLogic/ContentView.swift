@@ -21,7 +21,7 @@ struct ContentView: View {
                                     .scaledToFit()
                                     .frame(width: geometry.size.width * scaling_width,
                                            height: geometry.size.height * scaling_height)
-                                    .offset(x: -5, y: -28)
+                                    //.offset(x: -5, y: -28)
                             }
                             .zIndex(1) // Stelle sicher, dass dieses Element klickbar bleibt
                             
@@ -31,7 +31,7 @@ struct ContentView: View {
                                     .scaledToFit()
                                     .frame(width: geometry.size.width * scaling_width,
                                            height: geometry.size.height * scaling_height)
-                                    .offset(x: -19, y: -28)
+                                    //.offset(x: -19, y: -28)
                             }
                             .zIndex(1)
                         }
@@ -280,6 +280,7 @@ struct MiddleView: View {
             }
         }
     }
+    
     
     private func initializePlayers() {
         if let workingPrincipleURL = Bundle.main.url(forResource: "basil", withExtension: "mp4") {
