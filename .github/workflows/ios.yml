@@ -44,7 +44,7 @@ jobs:
           # Select an iPhone simulator with iOS 18.4 or higher
           device=$(xcrun xctrace list devices 2>&1 | grep -oE 'iPhone[^)]*\(18\.[4-9][^)]*\)' | head -1 | awk -F'(' '{print $1}' | awk '{$1=$1;print}' | sed -e "s/ Simulator$//")
           if [ -z "$device" ]; then
-            echo "Error: No iPhone simulator with iOS 18.4 or higher found."
+            echo "Error: No iPhone simulator with iOS 17.6 or higher found."
             xcrun xctrace list devices
             exit 1
           fi
