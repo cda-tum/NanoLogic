@@ -1,4 +1,9 @@
- Xcode build products
+Xcode build products
+# Xcode
+*.xcuserdata/
+*.xcuserstate
+*.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+
 build/
 DerivedData/
 
