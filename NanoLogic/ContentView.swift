@@ -6,8 +6,8 @@ struct ContentView: View {
         NavigationStack {
             GeometryReader { geometry in
                 ZStack {
-                    Color.white
-                        .ignoresSafeArea() // Full-screen background
+                    Color(.systemBackground)
+                        .ignoresSafeArea() // Full-screen adaptive background
                     
                     // Responsive LazyVGrid
                     LazyVGrid(
@@ -126,28 +126,63 @@ struct NavigationTile<Destination: View>: View {
 }
 
 struct SimulationView: View {
-    @State var isSimulating: Bool = false
-    @State var simulationIndex: Double = 0
-    @State var maxSimulationSteps: Double = 3 // Bilder 0-3, also 4 Bilder insgesamt
-    @State var currentLayoutImage: String = "neutral"
-    
+    @State private var isSimulating: Bool = false
+    @State private var simulationIndex: Double = 0
+    @State private var maxSimulationSteps: Double = 3 // Bilder 0-3, also 4 Bilder insgesamt
+    @State private var currentLayoutImage: String = "neutral"
+    @State private var showInfo: Bool = false // Steuert das Anzeigen des Info-Popups
+
     var body: some View {
         GeometryReader { geometry in
             ScrollView {
                 VStack(spacing: 20) {
-                    // Title
-                    Text("Simulation")
-                        .font(.largeTitle)
-                        .dynamicTypeSize(.xLarge)
-                        .padding(.top, 20)
-                        .padding(.horizontal)
+                    // Title and Info Icon
+                    ZStack {
+                        // Center the title
+                        Text("Simulation")
+                            .font(.largeTitle)
+                            .dynamicTypeSize(.xLarge)
+                        
+                        // Place the info button on the right
+                        HStack {
+                            Spacer()
+                            Button(action: {
+                                showInfo = true
+                            }) {
+                                Image(systemName: "info.circle")
+                                    .font(.title2)
+                                    .foregroundColor(.blue)
+                            }
+                            .popover(isPresented: $showInfo) {
+                                VStack(alignment: .leading, spacing: 10) {
+                                    Text("Physical Simulation")
+                                        .font(.headline)
+                                        .padding(.bottom, 5)
+                                    Text("As a critical component of any design validation workflow, physical simulation serves as the basis for verifying the behavior of circuit layouts prior to fabrication, bridging the gap between software and hardware. This physical simulation aims to predict the charge distribution that encodes the bit information. Green dots represent negatively charged SiDBs, while transparent ones represent neutrally charged ones.")
+                                    Button("Close") {
+                                        showInfo = false
+                                    }
+                                    .frame(maxWidth: .infinity, alignment: .trailing)
+                                    .padding(.top, 10)
+                                    .font(.callout)
+                                }
+                                .padding()
+                                .frame(width: geometry.size.width * 0.8)
+                            }
+                        }
+                    }
+                    .padding(.top, 20)
+                    .padding(.horizontal)
+                    .padding(.top, 20)
+                    .padding(.horizontal)
                     
                     // Layout image
                     Image(currentLayoutImage)
                         .resizable()
                         .scaledToFit()
-                        .frame(maxWidth: min(geometry.size.width * 0.9, 400), maxHeight: min(geometry.size.height * 0.5, 400))
-                        .padding(.horizontal)
+                        .frame(width: geometry.size.width * 0.9) // Scale width, let height adjust
+                        .frame(maxWidth: .infinity, alignment: .center) // Center image
+                        .padding(.vertical, 10)
                     
                     // Simulation controls
                     if !isSimulating {
@@ -159,10 +194,11 @@ struct SimulationView: View {
                                 .font(.headline)
                                 .foregroundColor(.white)
                                 .padding()
-                                .frame(maxWidth: min(geometry.size.width * 0.8, 200))
+                                .frame(maxWidth: geometry.size.width * 0.8)
                                 .background(Color.blue)
                                 .cornerRadius(10)
                         }
+                        .frame(maxWidth: .infinity, alignment: .center) // Center button
                         .padding(.vertical)
                     } else {
                         VStack(spacing: 20) {
@@ -172,7 +208,7 @@ struct SimulationView: View {
                                 stateButton(index: 2, title: "2nd Excited", geometry: geometry)
                                 stateButton(index: 3, title: "3rd Excited", geometry: geometry)
                             }
-                            .padding(.horizontal)
+                            .frame(maxWidth: .infinity, alignment: .center) // Center HStack
                             
                             Button(action: {
                                 resetSimulation()
@@ -182,16 +218,18 @@ struct SimulationView: View {
                                     .font(.headline)
                                     .foregroundColor(.white)
                                     .padding()
-                                    .frame(maxWidth: min(geometry.size.width * 0.8, 200))
+                                    .frame(maxWidth: geometry.size.width * 0.8)
                                     .background(Color.red)
                                     .cornerRadius(10)
                             }
+                            .frame(maxWidth: .infinity, alignment: .center) // Center button
                             .padding(.vertical)
                         }
                     }
                     
                     Spacer()
                 }
+                .frame(maxWidth: .infinity, alignment: .center) // Center entire VStack
                 .padding(.bottom, 20) // Extra padding for home indicator
             }
             .ignoresSafeArea(.keyboard) // Prevent keyboard from pushing content
@@ -211,7 +249,7 @@ struct SimulationView: View {
                 .foregroundColor(.white)
                 .multilineTextAlignment(.center)
                 .padding(8)
-                .frame(maxWidth: min(geometry.size.width * 0.22, 100), minHeight: 44)
+                .frame(maxWidth: geometry.size.width * 0.22, minHeight: 44)
                 .background(Int(simulationIndex) == index ? Color.blue : Color.gray)
                 .cornerRadius(10)
                 .overlay(
@@ -237,6 +275,7 @@ struct SimulationView: View {
     }
 }
 
+
 struct CircuitView: View {
     @State var selectedCircuit: String = "mux21"
     @State var scale: CGFloat = 1.0
@@ -244,6 +283,7 @@ struct CircuitView: View {
     @State var designStage: DesignStage = .initial
     @State var isComputing: Bool = false
     @State var computationProgress: CGFloat = 0
+    @State private var showInfo: Bool = false // Controls the info popover
 
     let circuits = ["mux21", "c17", "majority"]
 
@@ -265,9 +305,45 @@ struct CircuitView: View {
 
     var body: some View {
         VStack {
-            Text("Circuit Design")
-                .font(.largeTitle)
-                .padding()
+            // Title and Info Icon
+            ZStack {
+                // Center the title
+                Text("Circuit Design")
+                    .font(.largeTitle)
+                    .dynamicTypeSize(.xLarge)
+                
+                // Place the info button on the right
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        showInfo = true
+                    }) {
+                        Image(systemName: "info.circle")
+                            .font(.title2)
+                            .foregroundColor(.blue)
+                            .accessibilityLabel("Show circuit design information")
+                    }
+                    .popover(isPresented: $showInfo) {
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("Circuit Design")
+                                .font(.headline)
+                                .padding(.bottom, 5)
+                            Text("This interface enables the design of circuits (e.g., mux21, c17, majority) using Silicon Dangling Bonds (SiDBs). Select a circuit and progress through design stages: initial defects, skeleton placement, and final gate design. Zoom in/out to inspect layouts during computation.")
+                            Button("Close") {
+                                showInfo = false
+                            }
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                            .padding(.top, 10)
+                            .font(.callout)
+                        }
+                        .padding()
+                        .frame(width: UIScreen.main.bounds.width * 0.8)
+                    }
+                }
+                .padding(.trailing, 10) // Add padding to avoid overlap
+            }
+            .padding(.top, 20)
+            .padding(.horizontal)
 
             HStack(spacing: 15) {
                 ForEach(circuits, id: \.self) { circuit in
@@ -371,7 +447,7 @@ struct CircuitView: View {
         }
     }
 
-     var buttonLabel: String {
+    var buttonLabel: String {
         switch designStage {
         case .initial: return "Find Placement & Routing for Skeletons"
         case .skeletons: return "On-the-Fly Gate Design"
@@ -379,7 +455,7 @@ struct CircuitView: View {
         }
     }
 
-     var buttonColor: Color {
+    var buttonColor: Color {
         switch designStage {
         case .initial: return .blue
         case .skeletons: return .green
@@ -387,7 +463,7 @@ struct CircuitView: View {
         }
     }
 
-     var computationMessage: String {
+    var computationMessage: String {
         switch designStage {
         case .initial: return "Computing placement and routing for \(selectedCircuit)..."
         case .skeletons: return "Designing gates on-the-fly for \(selectedCircuit)..."
@@ -395,7 +471,7 @@ struct CircuitView: View {
         }
     }
 
-     func startComputation() {
+    func startComputation() {
         isComputing = true
         computationProgress = 0.0
 
@@ -410,7 +486,7 @@ struct CircuitView: View {
         }
     }
 
-     func finishComputation() {
+    func finishComputation() {
         withAnimation(.easeInOut(duration: 0.3)) {
             switch designStage {
             case .initial: designStage = .skeletons
@@ -427,22 +503,23 @@ struct CircuitView: View {
 
 struct DesignView: View {
     var fieldName: String
-    @State  var selectedInput: Int = 0
-    @State  var stage: Stage = .initial
+    @State private var selectedInput: Int = 0
+    @State private var stage: Stage = .initial
+    @State private var showInfo: Bool = false // Controls the info popover
+
+    let binaryLabels = ["00", "01", "10", "11"]
     
-     let binaryLabels = ["00", "01", "10", "11"]
-    
-     enum Stage {
+    enum Stage {
         case initial
         case neutral
         case simulated
     }
     
-     var andOutput: String {
+    var andOutput: String {
         selectedInput == 3 ? "1" : "0"
     }
     
-     var currentImage: String {
+    var currentImage: String {
         switch stage {
         case .initial:
             return "working_without_canvas_sidbs"
@@ -457,19 +534,54 @@ struct DesignView: View {
         GeometryReader { geometry in
             ScrollView {
                 VStack(spacing: 20) {
-                    // Title
-                    Text("Logic Design")
-                        .font(.largeTitle)
-                        .dynamicTypeSize(.xLarge)
-                        .padding(.top, 20)
-                        .padding(.horizontal)
+                    // Title and Info Icon
+                    ZStack {
+                        // Center the title
+                        Text("Logic Design")
+                            .font(.largeTitle)
+                            .dynamicTypeSize(.xLarge)
+                        
+                        // Place the info button on the right
+                        HStack {
+                            Spacer()
+                            Button(action: {
+                                showInfo = true
+                            }) {
+                                Image(systemName: "info.circle")
+                                    .font(.title2)
+                                    .foregroundColor(.blue)
+                                    .accessibilityLabel("Show logic design information")
+                            }
+                            .popover(isPresented: $showInfo) {
+                                VStack(alignment: .leading, spacing: 10) {
+                                    Text("Logic Design")
+                                        .font(.headline)
+                                        .padding(.bottom, 5)
+                                    Text("Gates are the fundamental building blocks of logic in every circuit technology, making their automatic and efficient design essential. The design process begins with predefined input and output wires, aiming to strategically place Silicon Dangling Bonds (SiDBs) within the area to encode the desired logic through charge distribution.")
+                                    Text("Here, an AND gate, designed and validated through physical simulation, is constructed using four SiDBs positioned in the central region.")
+                                    Button("Close") {
+                                        showInfo = false
+                                    }
+                                    .frame(maxWidth: .infinity, alignment: .trailing)
+                                    .padding(.top, 10)
+                                    .font(.callout)
+                                }
+                                .padding()
+                                .frame(width: geometry.size.width * 0.8)
+                            }
+                        }
+                        .padding(.trailing, 10) // Add padding to avoid overlap
+                    }
+                    .padding(.top, 20)
+                    .padding(.horizontal)
                     
                     // Image display
                     Image(currentImage)
                         .resizable()
                         .scaledToFit()
-                        .frame(maxWidth: geometry.size.width * 0.9, maxHeight: geometry.size.height * 0.5)
-                        .padding(.horizontal)
+                        .frame(width: geometry.size.width * 0.9)
+                        .frame(maxWidth: .infinity, alignment: .center) // Center image
+                        .padding(.vertical, 10)
                     
                     // Controls based on stage
                     switch stage {
@@ -484,7 +596,7 @@ struct DesignView: View {
                                 .font(.headline)
                                 .foregroundColor(.white)
                                 .padding()
-                                .frame(maxWidth: geometry.size.width * 0.3, maxHeight: 100)
+                                .frame(maxWidth: geometry.size.width * 0.8)
                                 .background(Color.blue)
                                 .cornerRadius(10)
                                 .overlay(
@@ -492,6 +604,7 @@ struct DesignView: View {
                                         .stroke(Color.white, lineWidth: 2)
                                 )
                         }
+                        .frame(maxWidth: .infinity, alignment: .center) // Center button
                         .padding(.vertical)
                         .accessibilityLabel("Design AND gate")
                         
@@ -510,6 +623,7 @@ struct DesignView: View {
                                 .background(Color.blue)
                                 .cornerRadius(10)
                         }
+                        .frame(maxWidth: .infinity, alignment: .center) // Center button
                         .padding(.vertical)
                         
                     case .simulated:
@@ -517,6 +631,7 @@ struct DesignView: View {
                             Text("Input Pattern (A, B) for AND Gate")
                                 .font(.subheadline)
                                 .dynamicTypeSize(.medium)
+                                .frame(maxWidth: .infinity, alignment: .center)
                                 .padding(.bottom, 5)
                             
                             HStack(spacing: 10) {
@@ -535,18 +650,20 @@ struct DesignView: View {
                                     }
                                 }
                             }
+                            .frame(maxWidth: .infinity, alignment: .center) // Center HStack
                             
                             Text("AND Output: \(andOutput)")
                                 .font(.subheadline)
                                 .dynamicTypeSize(.medium)
+                                .frame(maxWidth: .infinity, alignment: .center)
                                 .padding(.top, 10)
                         }
-                        .padding(.horizontal)
                         .padding(.vertical)
                     }
                     
                     Spacer()
                 }
+                .frame(maxWidth: .infinity, alignment: .center) // Center entire VStack
                 .padding(.bottom, 20) // Extra padding for home indicator
             }
             .ignoresSafeArea(.keyboard)
@@ -554,7 +671,6 @@ struct DesignView: View {
         }
     }
 }
-
 
 struct VideoPlayerView: View {
     var videoName: String
@@ -583,24 +699,57 @@ struct VideoPlayerView: View {
 }
 
 struct AnalysisView: View {
-    @State  var selectedDomain: String = "Temperature Domain"
+    @State var selectedDomain: String = "Temperature Domain"
+    @State private var showInfo: Bool = false // Controls the info popover
     
     var body: some View {
         GeometryReader { geometry in
             ScrollView {
                 VStack(spacing: 20) {
-                    // Title
-                    Text("Analysis")
-                        .font(.largeTitle)
-                        .dynamicTypeSize(.xLarge)
-                        .padding(.top, 20)
-                        .padding(.horizontal)
+                    // Title and Info Icon
+                    ZStack {
+                        // Center the title
+                        Text("Analysis")
+                            .font(.largeTitle)
+                            .dynamicTypeSize(.xLarge)
+                        
+                        // Place the info button on the right
+                        HStack {
+                            Spacer()
+                            Button(action: {
+                                showInfo = true
+                            }) {
+                                Image(systemName: "info.circle")
+                                    .font(.title2)
+                                    .foregroundColor(.blue)
+                                    .accessibilityLabel("Show analysis information")
+                            }
+                            .popover(isPresented: $showInfo) {
+                                VStack(alignment: .leading, spacing: 10) {
+                                    Text("Analysis")
+                                        .font(.headline)
+                                        .padding(.bottom, 5)
+                                    Text("This analysis interface allows you to evaluate the performance of circuit layouts under different conditions. Choose between the Temperature Simulation to analyze thermal effects on SiDB logic or the Operational Domain to assess robustness against material imperfections.")
+                                    Button("Close") {
+                                        showInfo = false
+                                    }
+                                    .frame(maxWidth: .infinity, alignment: .trailing)
+                                    .padding(.top, 10)
+                                    .font(.callout)
+                                }
+                                .padding()
+                                .frame(width: geometry.size.width * 0.8)
+                            }
+                        }
+                        .padding(.trailing, 10) // Add padding to avoid overlap
+                    }
+                    .padding(.top, 20)
+                    .padding(.horizontal)
                     
                     // Domain Picker
                     Picker("Select Domain", selection: $selectedDomain) {
                         Text("Temperature").tag("Temperature Domain")
                         Text("Operational").tag("Operational Domain")
-                        Text("Defect").tag("Defect Influence")
                     }
                     .pickerStyle(.segmented)
                     .frame(maxWidth: geometry.size.width * 0.9)
@@ -612,8 +761,6 @@ struct AnalysisView: View {
                             TemperatureView()
                         } else if selectedDomain == "Operational Domain" {
                             OperationalDomainView()
-                        } else {
-                            DefectInfluenceView()
                         }
                     }
                     .frame(maxWidth: .infinity)
@@ -645,7 +792,7 @@ struct OperationalDomainView: View {
     let playbackSpeed: Float = 200.0
     
     enum Section: String, CaseIterable, Identifiable {
-        case parameters = "Physical Parameter Dependency"
+        case parameters = "Parameter Dependency"
         case algorithms = "Operational Domain"
         var id: String { self.rawValue }
     }
@@ -688,12 +835,12 @@ struct OperationalDomainView: View {
     var parameterSelectionSection: some View {
         GeometryReader { geometry in
             VStack(spacing: 15) {
-                // SVG Image with increased size
+                // SVG Image with increased size and dynamic scaling
                 if let svgName = svgFileName {
                     Image(svgName)
                         .resizable()
                         .scaledToFit()
-                        .frame(maxWidth: geometry.size.width * 0.9, maxHeight: geometry.size.height * 0.6) // Increased size
+                        .frame(maxWidth: max(geometry.size.width * 0.9, 600)) // Ensure minimum size on larger devices
                         .padding(.horizontal)
                         .accessibilityLabel("Charge distribution for ε_r \(String(format: "%.1f", epsilonR)) and λ_tf \(String(format: "%.1f", lambdaTF))")
                 } else {
@@ -707,7 +854,7 @@ struct OperationalDomainView: View {
                     // Lambda TF Slider and Text
                     VStack(spacing: 8) {
                         Slider(value: $lambdaTF, in: 1.0...10.0, step: 0.5)
-                            .frame(width: min(geometry.size.width * 0.8, 350)) // Responsive width
+                            .frame(width: geometry.size.width * 0.8) // Responsive width
                             .tint(.blue)
                         Text("λ\(Text("tf").font(.footnote).baselineOffset(-5)): \(String(format: "%.1f", lambdaTF))")
                             .font(.subheadline)
@@ -716,7 +863,7 @@ struct OperationalDomainView: View {
                     // Epsilon R Slider and Text
                     VStack(spacing: 8) {
                         Slider(value: $epsilonR, in: 1.0...10.0, step: 0.5)
-                            .frame(width: min(geometry.size.width * 0.8, 350)) // Responsive width
+                            .frame(width: geometry.size.width * 0.8)
                             .tint(.blue)
                         Text("ε\(Text("r").font(.footnote).baselineOffset(-5)): \(String(format: "%.1f", epsilonR))")
                             .font(.subheadline)
@@ -728,7 +875,7 @@ struct OperationalDomainView: View {
         }
         .frame(minHeight: 500) // Ensure enough space for the plot and sliders
     }
-    
+
     var algorithmSimulationSection: some View {
         VStack(spacing: 15) {
             adaptiveAlgorithmButtons
@@ -932,7 +1079,7 @@ struct TemperatureView: View {
                         }
                     ), in: 1...400, step: 5)
                     .tint(.white.opacity(0.8)) // White thumb for contrast
-                    .frame(width: min(geometry.size.width * 0.8, 350)) // Dynamic width
+                    .frame(width: geometry.size.width * 0.8) // Dynamic width
                 }
 
                 Text("Temperature: \(Int(temperature)) K")
@@ -988,103 +1135,6 @@ struct TemperatureView: View {
     }
 }
 
-
-struct DefectInfluenceView: View {
-    @State var defectPlayer: AVPlayer?
-    @State var isPlaying = false
-    @Environment(\.horizontalSizeClass) var horizontalSizeClass
-    let playbackSpeed: Float = 1 // Adjust speed if needed
-    let videoName = "defect_influence" // Replace with your video file name (without extension)
-    
-    var body: some View {
-        ScrollView {
-            GeometryReader { geometry in
-                VStack(spacing: 15) {
-                    Text("Defect Influence")
-                        .font(.title)
-                        .padding(.top, 10)
-                    
-                    VideoPlayer(player: defectPlayer)
-                        .aspectRatio(600 / 531, contentMode: .fit) // Maintain original aspect ratio
-                        .frame(
-                            maxWidth: geometry.size.width * 0.9, // 90% of the screen width
-                            maxHeight: geometry.size.height * 0.6 // 60% of the screen height
-                        )
-                        .cornerRadius(12)
-                        //.shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
-                        .padding()
-                    
-                    HStack(spacing: 20) {
-                        Spacer()
-                        playPauseButton
-                        repeatButton
-                        Spacer()
-                    }
-                    
-                    Spacer(minLength: 20)
-                }
-                .padding()
-            }
-            .frame(minHeight: 500) // Ensure enough space for the video and controls
-        }
-        .onAppear(perform: initializePlayer)
-        .onDisappear(perform: stopPlayer)
-    }
-    
-    var playPauseButton: some View {
-        Button(action: {
-            guard let player = defectPlayer else { print("No player for defect video"); return }
-            if isPlaying {
-                player.pause()
-            } else {
-                player.play()
-                player.rate = playbackSpeed
-            }
-            isPlaying.toggle()
-        }) {
-            Image(systemName: isPlaying ? "pause.fill" : "play.fill")
-                .font(.system(size: buttonSize))
-                .foregroundColor(.white)
-                .padding(10)
-                .background(Circle().fill(Color.blue))
-        }
-    }
-    
-    var repeatButton: some View {
-        Button(action: {
-            guard let player = defectPlayer else { print("No player for defect video"); return }
-            player.seek(to: .zero)
-            player.play()
-            player.rate = playbackSpeed
-            isPlaying = true
-        }) {
-            Image(systemName: "repeat")
-                .font(.system(size: buttonSize))
-                .foregroundColor(.white)
-                .padding(10)
-                .background(Circle().fill(Color.green))
-        }
-    }
-    
-    func initializePlayer() {
-        if let videoURL = Bundle.main.url(forResource: videoName, withExtension: "mp4") {
-            defectPlayer = AVPlayer(url: videoURL)
-            print("Defect video player initialized")
-        } else {
-            print("Defect video file '\(videoName).mp4' not found")
-        }
-    }
-    
-    func stopPlayer() {
-        defectPlayer?.pause()
-        isPlaying = false
-    }
-    
-    // Adjust button size for different devices
-    var buttonSize: CGFloat {
-        horizontalSizeClass == .compact ? 24 : 30
-    }
-}
 
 // Preview
 #Preview {
