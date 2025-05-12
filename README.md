@@ -2,7 +2,7 @@
 
 A SwiftUI-based iOS application.
 
-[![CI Status](https://github.com/your-username/NanoLogic/actions/workflows/ios.yml/badge.svg?branch=main&style=flat)](https://github.com/your-username/NanoLogic/actions/workflows/ios.yml)
+[![CI Status](https://github.com/Drewniok/NanoLogic/actions/workflows/ios.yml/badge.svg?branch=main&style=flat)](https://github.com/Drewniok/NanoLogic/actions/workflows/ios.yml)
 
 ## Overview
 NanoLogic is an iOS app built with SwiftUI, featuring a clean architecture and automated CI/CD with GitHub Actions.
