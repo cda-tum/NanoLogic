@@ -63,7 +63,7 @@ struct NavigationTile<Destination: View>: View {
     let destination: Destination
     let size: CGFloat
     
-    @State private var isPressed = false // For tap animation
+    @State var isPressed = false // For tap animation
     
     var body: some View {
         NavigationLink(destination: destination) {
@@ -126,10 +126,10 @@ struct NavigationTile<Destination: View>: View {
 }
 
 struct SimulationView: View {
-    @State private var isSimulating: Bool = false
-    @State private var simulationIndex: Double = 0
-    @State private var maxSimulationSteps: Double = 3 // Bilder 0-3, also 4 Bilder insgesamt
-    @State private var currentLayoutImage: String = "neutral"
+    @State var isSimulating: Bool = false
+    @State var simulationIndex: Double = 0
+    @State var maxSimulationSteps: Double = 3 // Bilder 0-3, also 4 Bilder insgesamt
+    @State var currentLayoutImage: String = "neutral"
     
     var body: some View {
         GeometryReader { geometry in
@@ -200,7 +200,7 @@ struct SimulationView: View {
     }
     
     // Helper function for state buttons
-    private func stateButton(index: Int, title: String, geometry: GeometryProxy) -> some View {
+    func stateButton(index: Int, title: String, geometry: GeometryProxy) -> some View {
         Button(action: {
             simulationIndex = Double(index)
             updateSimulationImage()
@@ -221,39 +221,39 @@ struct SimulationView: View {
         }
     }
     
-    private func startSimulation() {
+    func startSimulation() {
         isSimulating = true
         simulationIndex = 0
         updateSimulationImage()
     }
     
-    private func updateSimulationImage() {
+    func updateSimulationImage() {
         currentLayoutImage = "\(Int(simulationIndex))"
     }
     
-    private func resetSimulation() {
+    func resetSimulation() {
         isSimulating = false
         currentLayoutImage = "neutral"
     }
 }
 
 struct CircuitView: View {
-    @State private var selectedCircuit: String = "mux21"
-    @State private var scale: CGFloat = 1.0
-    @State private var lastScale: CGFloat = 1.0
-    @State private var designStage: DesignStage = .initial
-    @State private var isComputing: Bool = false
-    @State private var computationProgress: CGFloat = 0
+    @State var selectedCircuit: String = "mux21"
+    @State var scale: CGFloat = 1.0
+    @State var lastScale: CGFloat = 1.0
+    @State var designStage: DesignStage = .initial
+    @State var isComputing: Bool = false
+    @State var computationProgress: CGFloat = 0
 
-    private let circuits = ["mux21", "c17", "majority"]
+    let circuits = ["mux21", "c17", "majority"]
 
-    private enum DesignStage {
+    enum DesignStage {
         case initial
         case skeletons
         case final
     }
 
-    private var currentImage: String? {
+    var currentImage: String? {
         switch designStage {
         case .initial: return "only_defects"
         case .skeletons: return "\(selectedCircuit)_without_canvas"
@@ -261,7 +261,7 @@ struct CircuitView: View {
         }
     }
 
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
 
     var body: some View {
         VStack {
@@ -371,7 +371,7 @@ struct CircuitView: View {
         }
     }
 
-    private var buttonLabel: String {
+     var buttonLabel: String {
         switch designStage {
         case .initial: return "Find Placement & Routing for Skeletons"
         case .skeletons: return "On-the-Fly Gate Design"
@@ -379,7 +379,7 @@ struct CircuitView: View {
         }
     }
 
-    private var buttonColor: Color {
+     var buttonColor: Color {
         switch designStage {
         case .initial: return .blue
         case .skeletons: return .green
@@ -387,7 +387,7 @@ struct CircuitView: View {
         }
     }
 
-    private var computationMessage: String {
+     var computationMessage: String {
         switch designStage {
         case .initial: return "Computing placement and routing for \(selectedCircuit)..."
         case .skeletons: return "Designing gates on-the-fly for \(selectedCircuit)..."
@@ -395,7 +395,7 @@ struct CircuitView: View {
         }
     }
 
-    private func startComputation() {
+     func startComputation() {
         isComputing = true
         computationProgress = 0.0
 
@@ -410,7 +410,7 @@ struct CircuitView: View {
         }
     }
 
-    private func finishComputation() {
+     func finishComputation() {
         withAnimation(.easeInOut(duration: 0.3)) {
             switch designStage {
             case .initial: designStage = .skeletons
@@ -427,22 +427,22 @@ struct CircuitView: View {
 
 struct DesignView: View {
     var fieldName: String
-    @State private var selectedInput: Int = 0
-    @State private var stage: Stage = .initial
+    @State  var selectedInput: Int = 0
+    @State  var stage: Stage = .initial
     
-    private let binaryLabels = ["00", "01", "10", "11"]
+     let binaryLabels = ["00", "01", "10", "11"]
     
-    private enum Stage {
+     enum Stage {
         case initial
         case neutral
         case simulated
     }
     
-    private var andOutput: String {
+     var andOutput: String {
         selectedInput == 3 ? "1" : "0"
     }
     
-    private var currentImage: String {
+     var currentImage: String {
         switch stage {
         case .initial:
             return "working_without_canvas_sidbs"
@@ -583,7 +583,7 @@ struct VideoPlayerView: View {
 }
 
 struct AnalysisView: View {
-    @State private var selectedDomain: String = "Temperature Domain"
+    @State  var selectedDomain: String = "Temperature Domain"
     
     var body: some View {
         GeometryReader { geometry in
@@ -630,19 +630,19 @@ struct AnalysisView: View {
 
 
 struct OperationalDomainView: View {
-    @State private var gridSearchPlayer: AVPlayer?
-    @State private var randomPlayer: AVPlayer?
-    @State private var floodFillPlayer: AVPlayer?
-    @State private var contourPlayer: AVPlayer?
-    @State private var isGridSearchPlaying = false
-    @State private var isRandomPlaying = false
-    @State private var isFloodFillPlaying = false
-    @State private var isContourPlaying = false
-    @State private var selectedVideo: String = "Grid Search"
-    @State private var epsilonR: Double = 5.5 // Default epsilon_r
-    @State private var lambdaTF: Double = 5.0 // Default lambda_tf
-    @State private var selectedSection: Section = .parameters // Default to parameter selection
-    private let playbackSpeed: Float = 200.0
+    @State var gridSearchPlayer: AVPlayer?
+    @State var randomPlayer: AVPlayer?
+    @State var floodFillPlayer: AVPlayer?
+    @State var contourPlayer: AVPlayer?
+    @State var isGridSearchPlaying = false
+    @State var isRandomPlaying = false
+    @State var isFloodFillPlaying = false
+    @State var isContourPlaying = false
+    @State var selectedVideo: String = "Grid Search"
+    @State var epsilonR: Double = 5.5 // Default epsilon_r
+    @State var lambdaTF: Double = 5.0 // Default lambda_tf
+    @State var selectedSection: Section = .parameters // Default to parameter selection
+    let playbackSpeed: Float = 200.0
     
     enum Section: String, CaseIterable, Identifiable {
         case parameters = "Physical Parameter Dependency"
@@ -670,13 +670,13 @@ struct OperationalDomainView: View {
         .onDisappear(perform: stopAllPlayers)
     }
     
-    private var headerView: some View {
+    var headerView: some View {
         Text("Operational Domain")
             .font(.title)
             .padding(.top, 10)
     }
     
-    private var sectionPickerView: some View {
+    var sectionPickerView: some View {
         Picker("Section", selection: $selectedSection) {
             ForEach(Section.allCases) { section in
                 Text(section.rawValue).tag(section)
@@ -685,7 +685,7 @@ struct OperationalDomainView: View {
         .pickerStyle(SegmentedPickerStyle())
     }
     
-    private var parameterSelectionSection: some View {
+    var parameterSelectionSection: some View {
         GeometryReader { geometry in
             VStack(spacing: 15) {
                 // SVG Image with increased size
@@ -729,7 +729,7 @@ struct OperationalDomainView: View {
         .frame(minHeight: 500) // Ensure enough space for the plot and sliders
     }
     
-    private var algorithmSimulationSection: some View {
+    var algorithmSimulationSection: some View {
         VStack(spacing: 15) {
             adaptiveAlgorithmButtons
             videoSection
@@ -737,7 +737,7 @@ struct OperationalDomainView: View {
         .padding(.top, 10)
     }
     
-    private var adaptiveAlgorithmButtons: some View {
+    var adaptiveAlgorithmButtons: some View {
         VStack(spacing: 10) {
             HStack(spacing: 10) {
                 algorithmButton(for: "Grid Search")
@@ -751,7 +751,7 @@ struct OperationalDomainView: View {
     }
     
     @ViewBuilder
-    private func algorithmButton(for video: String) -> some View {
+    func algorithmButton(for video: String) -> some View {
         Button(action: { selectedVideo = video }) {
             Text(video)
                 .font(.system(size: 14, weight: .semibold))
@@ -762,7 +762,7 @@ struct OperationalDomainView: View {
         }
     }
     
-    private var videoSection: some View {
+    var videoSection: some View {
         Group {
             if selectedVideo == "Grid Search" {
                 videoPlayerSection(player: $gridSearchPlayer, isPlaying: $isGridSearchPlaying, videoName: "grid")
@@ -776,7 +776,7 @@ struct OperationalDomainView: View {
         }
     }
     
-    private var svgFileName: String? {
+    var svgFileName: String? {
         let epsilonStr = String(format: "%.1f", epsilonR).replacingOccurrences(of: ".", with: "_")
         let lambdaStr = String(format: "%.1f", lambdaTF).replacingOccurrences(of: ".", with: "_")
         let fileName = "charge_eps_\(epsilonStr)_lambda_\(lambdaStr)"
@@ -784,7 +784,7 @@ struct OperationalDomainView: View {
     }
     
     @ViewBuilder
-    private func videoPlayerSection(player: Binding<AVPlayer?>, isPlaying: Binding<Bool>, videoName: String) -> some View {
+    func videoPlayerSection(player: Binding<AVPlayer?>, isPlaying: Binding<Bool>, videoName: String) -> some View {
         VStack(spacing: 10) {
             VideoPlayer(player: player.wrappedValue)
                 .aspectRatio(4/3, contentMode: .fit)
@@ -801,7 +801,7 @@ struct OperationalDomainView: View {
     }
     
     @ViewBuilder
-    private func playPauseButton(player: Binding<AVPlayer?>, isPlaying: Binding<Bool>, videoName: String) -> some View {
+    func playPauseButton(player: Binding<AVPlayer?>, isPlaying: Binding<Bool>, videoName: String) -> some View {
         Button(action: {
             guard let player = player.wrappedValue else { print("No player for \(videoName)"); return }
             if isPlaying.wrappedValue {
@@ -821,7 +821,7 @@ struct OperationalDomainView: View {
     }
     
     @ViewBuilder
-    private func repeatButton(player: Binding<AVPlayer?>, isPlaying: Binding<Bool>, videoName: String) -> some View {
+     func repeatButton(player: Binding<AVPlayer?>, isPlaying: Binding<Bool>, videoName: String) -> some View {
         Button(action: {
             guard let player = player.wrappedValue else { print("No player for \(videoName)"); return }
             player.seek(to: .zero)
@@ -837,7 +837,7 @@ struct OperationalDomainView: View {
         }
     }
     
-    private func initializePlayers() {
+     func initializePlayers() {
         if let gridSearchURL = Bundle.main.url(forResource: "grid", withExtension: "mp4") {
             gridSearchPlayer = AVPlayer(url: gridSearchURL)
         }
@@ -852,7 +852,7 @@ struct OperationalDomainView: View {
         }
     }
     
-    private func stopAllPlayers() {
+     func stopAllPlayers() {
         gridSearchPlayer?.pause()
         randomPlayer?.pause()
         floodFillPlayer?.pause()
@@ -866,11 +866,11 @@ struct OperationalDomainView: View {
 
 
 struct TemperatureView: View {
-    @State private var temperature: Double = 1
-    @State private var cxImageName: String = "cx_1"
-    @State private var nandImageName: String = "nand_1"
-    @State private var selectedImage: ImageSelection = .crossing
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @State var temperature: Double = 1
+    @State var cxImageName: String = "cx_1"
+    @State var nandImageName: String = "nand_1"
+    @State var selectedImage: ImageSelection = .crossing
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
     
     enum ImageSelection: String, CaseIterable, Identifiable {
         case crossing = "Crossing"
@@ -909,7 +909,7 @@ struct TemperatureView: View {
         }
     }
     
-    private var sliderSection: some View {
+    var sliderSection: some View {
         GeometryReader { geometry in
             VStack(spacing: 10) {
                 ZStack(alignment: .center) { // Center alignment for thumb
@@ -944,7 +944,7 @@ struct TemperatureView: View {
         .frame(height: 60) // Reserve space for slider and text
     }
     
-    private var imageSection: some View {
+    var imageSection: some View {
         VStack {
             if selectedImage == .crossing {
                 singleImageView(name: cxImageName, size: imageSize)
@@ -955,7 +955,7 @@ struct TemperatureView: View {
         .padding(.top, 20)
     }
     
-    private func singleImageView(name: String, title: String? = nil, size: CGFloat) -> some View {
+    func singleImageView(name: String, title: String? = nil, size: CGFloat) -> some View {
         VStack(spacing: 5) {
             if let title = title {
                 Text(title)
@@ -970,7 +970,7 @@ struct TemperatureView: View {
         }
     }
     
-    private func updateImages(forTemperature temp: Int) {
+    func updateImages(forTemperature temp: Int) {
         cxImageName = "cx_\(temp)"
         nandImageName = "nand_\(temp)"
     }
@@ -978,23 +978,23 @@ struct TemperatureView: View {
     // MARK: - Responsive Layout Helpers
     
     // Check if we're on a compact device (iPhone or smaller iPad)
-    private var isCompact: Bool {
+    var isCompact: Bool {
         horizontalSizeClass == .compact
     }
     
     // Size for single image display
-    private var imageSize: CGFloat {
+    var imageSize: CGFloat {
         isCompact ? 300 : 500
     }
 }
 
 
 struct DefectInfluenceView: View {
-    @State private var defectPlayer: AVPlayer?
-    @State private var isPlaying = false
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    private let playbackSpeed: Float = 1 // Adjust speed if needed
-    private let videoName = "defect_influence" // Replace with your video file name (without extension)
+    @State var defectPlayer: AVPlayer?
+    @State var isPlaying = false
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    let playbackSpeed: Float = 1 // Adjust speed if needed
+    let videoName = "defect_influence" // Replace with your video file name (without extension)
     
     var body: some View {
         ScrollView {
@@ -1031,7 +1031,7 @@ struct DefectInfluenceView: View {
         .onDisappear(perform: stopPlayer)
     }
     
-    private var playPauseButton: some View {
+    var playPauseButton: some View {
         Button(action: {
             guard let player = defectPlayer else { print("No player for defect video"); return }
             if isPlaying {
@@ -1050,7 +1050,7 @@ struct DefectInfluenceView: View {
         }
     }
     
-    private var repeatButton: some View {
+    var repeatButton: some View {
         Button(action: {
             guard let player = defectPlayer else { print("No player for defect video"); return }
             player.seek(to: .zero)
@@ -1066,7 +1066,7 @@ struct DefectInfluenceView: View {
         }
     }
     
-    private func initializePlayer() {
+    func initializePlayer() {
         if let videoURL = Bundle.main.url(forResource: videoName, withExtension: "mp4") {
             defectPlayer = AVPlayer(url: videoURL)
             print("Defect video player initialized")
@@ -1075,13 +1075,13 @@ struct DefectInfluenceView: View {
         }
     }
     
-    private func stopPlayer() {
+    func stopPlayer() {
         defectPlayer?.pause()
         isPlaying = false
     }
     
     // Adjust button size for different devices
-    private var buttonSize: CGFloat {
+    var buttonSize: CGFloat {
         horizontalSizeClass == .compact ? 24 : 30
     }
 }
