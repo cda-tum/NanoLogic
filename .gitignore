@@ -1,0 +1,39 @@
+# Xcode build products
+build/
+DerivedData/
+
+# Xcode project files (user-specific)
+*.pbxuser
+*.mode1v3
+*.modev3
+*.perspectivev3
+xcuserdata/
+
+# Swift Package Manager
+.build/
+
+# CocoaPods
+Pods/
+Podfile.lock
+
+# Carthage
+Carthage/Build/
+
+# Backups and temporary files
+*.swp
+*.lock
+*.xcuserstate
+.DS_Store
+
+# Crash logs
+*.crash
+*.ips
+
+# Documentation archives
+docset.xar
+
+# Other common temporary files
+*.log
+*.tmp
+
+

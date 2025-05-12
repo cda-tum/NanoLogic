@@ -7,43 +7,121 @@ struct ContentView: View {
             GeometryReader { geometry in
                 ZStack {
                     Color.white
-                        .ignoresSafeArea() // Use ignoresSafeArea for full-screen background
-                    VStack (spacing: -2) {
-                        HStack (spacing: -2) {
-                            NavigationLink(destination: SimulationView()) {
-                                Image("simulation")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: geometry.size.width * 0.5)
-                                    
-                            }
-                            NavigationLink(destination: DesignView(fieldName: "Logic Design")) {
-                                Image("logic_design")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: geometry.size.width * 0.5)
-                                    
-                            }
-                        }
-                        HStack (spacing: -2) {
-                            NavigationLink(destination: CircuitView()) {
-                                Image("circuit_design")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: geometry.size.width * 0.5)
-                            }
-                            NavigationLink(destination: AnalysisView()) {
-                                Image("analysis")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: geometry.size.width * 0.5)
-                            }
-                        }
+                        .ignoresSafeArea() // Full-screen background
+                    
+                    // Responsive LazyVGrid
+                    LazyVGrid(
+                        columns: [
+                            GridItem(.flexible(), spacing: 8),
+                            GridItem(.flexible(), spacing: 8)
+                        ],
+                        spacing: 8
+                    ) {
+                        // Navigation tiles with distinct colors
+                        NavigationTile(
+                            iconName: "gearshape.fill",
+                            title: "Simulation",
+                            color: .blue,
+                            destination: SimulationView(),
+                            size: min(geometry.size.width, geometry.size.height) * 0.45
+                        )
+                        NavigationTile(
+                            iconName: "puzzlepiece.fill",
+                            title: "Logic Design",
+                            color: .green,
+                            destination: DesignView(fieldName: "Logic Design"),
+                            size: min(geometry.size.width, geometry.size.height) * 0.45
+                        )
+                        NavigationTile(
+                            iconName: "bolt.fill",
+                            title: "Circuit Design",
+                            color: .orange,
+                            destination: CircuitView(),
+                            size: min(geometry.size.width, geometry.size.height) * 0.45
+                        )
+                        NavigationTile(
+                            iconName: "chart.bar.fill",
+                            title: "Analysis",
+                            color: .purple,
+                            destination: AnalysisView(),
+                            size: min(geometry.size.width, geometry.size.height) * 0.45
+                        )
                     }
+                    .padding(.all, 12) // Padding for edge spacing
                 }
             }
             .navigationBarHidden(true)
         }
+    }
+}
+
+// Reusable NavigationTile view with customizable color
+struct NavigationTile<Destination: View>: View {
+    let iconName: String
+    let title: String
+    let color: Color
+    let destination: Destination
+    let size: CGFloat
+    
+    @State private var isPressed = false // For tap animation
+    
+    var body: some View {
+        NavigationLink(destination: destination) {
+            ZStack {
+                // Tile background
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(color.opacity(0.15)) // Subtle background color
+                    .frame(width: size, height: size)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(color.opacity(0.3), lineWidth: 1)
+                    )
+                    .shadow(radius: 3)
+                
+                // Optional gradient background (uncomment to use)
+                /*
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(
+                        LinearGradient(
+                            gradient: Gradient(colors: [color.opacity(0.2), color.opacity(0.05)]),
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .frame(width: size, height: size)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(color.opacity(0.3), lineWidth: 1)
+                    )
+                    .shadow(radius: 3)
+                */
+                
+                // Content: SF Symbol and Text
+                VStack(spacing: 8) {
+                    Image(systemName: iconName)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: size * 0.3, height: size * 0.3)
+                        .foregroundColor(color) // Match icon to tile color
+                    
+                    Text(title)
+                        .font(.system(size: size * 0.1, weight: .medium))
+                        .foregroundColor(.primary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 8)
+                }
+            }
+            .contentShape(RoundedRectangle(cornerRadius: 12)) // Ensure entire tile is tappable
+            .scaleEffect(isPressed ? 0.95 : 1.0) // Tap animation
+            .animation(.easeInOut(duration: 0.2), value: isPressed)
+            .accessibilityLabel(title) // Accessibility
+        }
+        .buttonStyle(PlainButtonStyle()) // Avoid default button styling
+        .simultaneousGesture(
+            DragGesture(minimumDistance: 0)
+                .onChanged { _ in isPressed = true }
+                .onEnded { _ in isPressed = false }
+        )
     }
 }
 
@@ -347,10 +425,8 @@ struct CircuitView: View {
     }
 }
 
-// New Field View with Images for Logic Design
 struct DesignView: View {
     var fieldName: String
-    @State private var isWorking: Bool = false
     @State private var selectedInput: Int = 0
     @State private var stage: Stage = .initial
     
@@ -363,29 +439,17 @@ struct DesignView: View {
     }
     
     private var andOutput: String {
-        if isWorking {
-            return selectedInput == 3 ? "1" : "0"
-        } else {
-            switch selectedInput {
-            case 1, 2: return "1"
-            case 3: return "1"
-            default: return "0"
-            }
-        }
-    }
-    
-    private var isOutputIncorrect: Bool {
-        !isWorking && (selectedInput == 1 || selectedInput == 2)
+        selectedInput == 3 ? "1" : "0"
     }
     
     private var currentImage: String {
         switch stage {
         case .initial:
-            return "\(isWorking ? "working" : "non_working")_without_canvas_sidbs"
+            return "working_without_canvas_sidbs"
         case .neutral:
-            return "\(isWorking ? "working" : "non_working")_neutral"
+            return "working_neutral"
         case .simulated:
-            return "\(isWorking ? "working" : "non_working")_\(selectedInput)"
+            return "working_\(selectedInput)"
         }
     }
     
@@ -400,20 +464,11 @@ struct DesignView: View {
                         .padding(.top, 20)
                         .padding(.horizontal)
                     
-                    // Working/Non-Working Picker
-                    Picker("Mode", selection: $isWorking) {
-                        Text("Non-Working").tag(false)
-                        Text("Working").tag(true)
-                    }
-                    .pickerStyle(.segmented)
-                    .frame(maxWidth: min(geometry.size.width * 0.9, 400))
-                    .padding(.horizontal)
-                    
                     // Image display
                     Image(currentImage)
                         .resizable()
                         .scaledToFit()
-                        .frame(maxWidth: min(geometry.size.width * 0.9, 400), maxHeight: min(geometry.size.height * 0.5, 400))
+                        .frame(maxWidth: geometry.size.width * 0.9, maxHeight: geometry.size.height * 0.5)
                         .padding(.horizontal)
                     
                     // Controls based on stage
@@ -425,15 +480,20 @@ struct DesignView: View {
                             }
                             UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                         }) {
-                            Text("Distribute 4 SiDBs")
+                            Text("Design AND Gate")
                                 .font(.headline)
                                 .foregroundColor(.white)
                                 .padding()
-                                .frame(maxWidth: min(geometry.size.width * 0.8, 250))
+                                .frame(maxWidth: geometry.size.width * 0.3, maxHeight: 100)
                                 .background(Color.blue)
                                 .cornerRadius(10)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(Color.white, lineWidth: 2)
+                                )
                         }
                         .padding(.vertical)
+                        .accessibilityLabel("Design AND gate")
                         
                     case .neutral:
                         Button(action: {
@@ -446,7 +506,7 @@ struct DesignView: View {
                                 .font(.headline)
                                 .foregroundColor(.white)
                                 .padding()
-                                .frame(maxWidth: min(geometry.size.width * 0.8, 250))
+                                .frame(maxWidth: geometry.size.width * 0.8)
                                 .background(Color.blue)
                                 .cornerRadius(10)
                         }
@@ -469,26 +529,17 @@ struct DesignView: View {
                                             .font(.subheadline)
                                             .foregroundColor(.white)
                                             .padding(8)
-                                            .frame(maxWidth: min(geometry.size.width * 0.2, 60), minHeight: 44)
+                                            .frame(maxWidth: geometry.size.width * 0.2, minHeight: 44)
                                             .background(selectedInput == index ? Color.blue : Color.gray)
                                             .cornerRadius(10)
                                     }
                                 }
                             }
                             
-                            HStack {
-                                Text("AND Output: \(andOutput)")
-                                    .font(.subheadline)
-                                    .dynamicTypeSize(.medium)
-                                    .foregroundColor(isOutputIncorrect ? .red : .black)
-                                
-                                if isOutputIncorrect {
-                                    Image(systemName: "exclamationmark.triangle")
-                                        .foregroundColor(.red)
-                                        .padding(.leading, 5)
-                                }
-                            }
-                            .padding(.top, 10)
+                            Text("AND Output: \(andOutput)")
+                                .font(.subheadline)
+                                .dynamicTypeSize(.medium)
+                                .padding(.top, 10)
                         }
                         .padding(.horizontal)
                         .padding(.vertical)
@@ -503,6 +554,7 @@ struct DesignView: View {
         }
     }
 }
+
 
 struct VideoPlayerView: View {
     var videoName: String
@@ -551,7 +603,7 @@ struct AnalysisView: View {
                         Text("Defect").tag("Defect Influence")
                     }
                     .pickerStyle(.segmented)
-                    .frame(maxWidth: min(geometry.size.width * 0.9, 400))
+                    .frame(maxWidth: geometry.size.width * 0.9)
                     .padding(.horizontal)
                     
                     // Conditional Content
@@ -636,12 +688,12 @@ struct OperationalDomainView: View {
     private var parameterSelectionSection: some View {
         GeometryReader { geometry in
             VStack(spacing: 15) {
-                // SVG Image with constrained height
+                // SVG Image with increased size
                 if let svgName = svgFileName {
                     Image(svgName)
                         .resizable()
                         .scaledToFit()
-                        .frame(maxHeight: min(geometry.size.height * 1.0, 500)) // Limit height
+                        .frame(maxWidth: geometry.size.width * 0.9, maxHeight: geometry.size.height * 0.6) // Increased size
                         .padding(.horizontal)
                         .accessibilityLabel("Charge distribution for ε_r \(String(format: "%.1f", epsilonR)) and λ_tf \(String(format: "%.1f", lambdaTF))")
                 } else {
@@ -656,25 +708,25 @@ struct OperationalDomainView: View {
                     VStack(spacing: 8) {
                         Slider(value: $lambdaTF, in: 1.0...10.0, step: 0.5)
                             .frame(width: min(geometry.size.width * 0.8, 350)) // Responsive width
-                            .tint(.blue) // Improve visibility
+                            .tint(.blue)
                         Text("λ\(Text("tf").font(.footnote).baselineOffset(-5)): \(String(format: "%.1f", lambdaTF))")
-                            .font(.subheadline) // Smaller font for consistency
+                            .font(.subheadline)
                     }
                     
                     // Epsilon R Slider and Text
                     VStack(spacing: 8) {
                         Slider(value: $epsilonR, in: 1.0...10.0, step: 0.5)
                             .frame(width: min(geometry.size.width * 0.8, 350)) // Responsive width
-                            .tint(.blue) // Improve visibility
+                            .tint(.blue)
                         Text("ε\(Text("r").font(.footnote).baselineOffset(-5)): \(String(format: "%.1f", epsilonR))")
-                            .font(.subheadline) // Smaller font for consistency
+                            .font(.subheadline)
                     }
                 }
                 .padding(.horizontal, geometry.size.width * 0.1) // Dynamic padding
             }
             .padding(.vertical, 10)
         }
-        .frame(minHeight: 400) // Ensure scrollable space
+        .frame(minHeight: 500) // Ensure enough space for the plot and sliders
     }
     
     private var algorithmSimulationSection: some View {
@@ -812,20 +864,6 @@ struct OperationalDomainView: View {
     }
 }
 
-// Preview Provider
-struct OperationalDomainView_Previews: PreviewProvider {
-    static var previews: some View {
-        OperationalDomainView()
-            .previewDevice(PreviewDevice(rawValue: "iPhone SE (3rd generation)"))
-            .previewDisplayName("iPhone SE")
-        OperationalDomainView()
-            .previewDevice(PreviewDevice(rawValue: "iPhone 14 Pro"))
-            .previewDisplayName("iPhone 14 Pro")
-        OperationalDomainView()
-            .previewDevice(PreviewDevice(rawValue: "iPad Pro (12.9-inch) (6th generation)"))
-            .previewDisplayName("iPad Pro")
-    }
-}
 
 struct TemperatureView: View {
     @State private var temperature: Double = 1
@@ -960,26 +998,34 @@ struct DefectInfluenceView: View {
     
     var body: some View {
         ScrollView {
-            VStack(spacing: 15) {
-                Text("Defect Influence")
-                    .font(.title)
-                    .padding(.top, 10)
-                
-                VideoPlayer(player: defectPlayer)
-                    .aspectRatio(600/531, contentMode: .fit) // Maintain original aspect ratio
-                    .frame(maxWidth: videoWidth)
-                    .padding()
-                
-                HStack(spacing: 20) {
-                    Spacer()
-                    playPauseButton
-                    repeatButton
-                    Spacer()
+            GeometryReader { geometry in
+                VStack(spacing: 15) {
+                    Text("Defect Influence")
+                        .font(.title)
+                        .padding(.top, 10)
+                    
+                    VideoPlayer(player: defectPlayer)
+                        .aspectRatio(600 / 531, contentMode: .fit) // Maintain original aspect ratio
+                        .frame(
+                            maxWidth: geometry.size.width * 0.9, // 90% of the screen width
+                            maxHeight: geometry.size.height * 0.6 // 60% of the screen height
+                        )
+                        .cornerRadius(12)
+                        //.shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 5)
+                        .padding()
+                    
+                    HStack(spacing: 20) {
+                        Spacer()
+                        playPauseButton
+                        repeatButton
+                        Spacer()
+                    }
+                    
+                    Spacer(minLength: 20)
                 }
-                
-                Spacer(minLength: 20)
+                .padding()
             }
-            .padding()
+            .frame(minHeight: 500) // Ensure enough space for the video and controls
         }
         .onAppear(perform: initializePlayer)
         .onDisappear(perform: stopPlayer)
@@ -1034,27 +1080,9 @@ struct DefectInfluenceView: View {
         isPlaying = false
     }
     
-    // MARK: - Responsive Layout Helpers
-    
-    // Check if we're on a compact device (iPhone or smaller iPad)
-    private var isCompact: Bool {
-        horizontalSizeClass == .compact
-    }
-    
-    // Video dimensions that adapt to screen size
-    private var videoWidth: CGFloat {
-        if isCompact {
-            // On smaller screens, use available width minus padding
-            return UIScreen.main.bounds.width - 40
-        } else {
-            // On larger screens, use original size with scaling
-            return 600 * 1.2
-        }
-    }
-    
     // Adjust button size for different devices
     private var buttonSize: CGFloat {
-        isCompact ? 24 : 30
+        horizontalSizeClass == .compact ? 24 : 30
     }
 }
 
