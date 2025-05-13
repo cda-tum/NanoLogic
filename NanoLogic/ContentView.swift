@@ -363,22 +363,20 @@ struct CircuitView: View {
             Spacer()
             GeometryReader { geometry in
                 ZStack {
-                    ScrollView([.horizontal, .vertical], showsIndicators: true) {
-                        if let imageName = currentImage, !isComputing {
-                            Image(imageName)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(
-                                    width: geometry.size.width * 0.8,
-                                    height: geometry.size.height * 0.8
-                                )
-                                .accessibilityLabel("Circuit image for \(selectedCircuit), stage \(designStage)")
-                        } else {
-                            Color.clear
-                                .frame(width: geometry.size.width, height: geometry.size.height)
-                        }
+                    if let imageName = currentImage, !isComputing {
+                        Image(imageName)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(
+                                width: geometry.size.width * 0.8,
+                                height: geometry.size.height * 0.8
+                            )
+                            .allowsHitTesting(false) // Prevent touch interactions
+                            .accessibilityLabel("Circuit image for \(selectedCircuit), stage \(designStage)")
+                    } else {
+                        Color.clear
+                            .frame(width: geometry.size.width, height: geometry.size.height)
                     }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center) // Center ScrollView content
 
                     if isComputing {
                         VStack(spacing: 25) {
@@ -398,6 +396,7 @@ struct CircuitView: View {
                         }
                     }
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center) // Center image
             }
 
             VStack {
