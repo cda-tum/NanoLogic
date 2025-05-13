@@ -275,15 +275,12 @@ struct SimulationView: View {
     }
 }
 
-
 struct CircuitView: View {
     @State var selectedCircuit: String = "mux21"
-    @State var scale: CGFloat = 1.0
-    @State var lastScale: CGFloat = 1.0
     @State var designStage: DesignStage = .initial
     @State var isComputing: Bool = false
     @State var computationProgress: CGFloat = 0
-    @State private var showInfo: Bool = false // Controls the info popover
+    @State private var showInfo: Bool = false
 
     let circuits = ["mux21", "c17", "maj"]
 
@@ -307,17 +304,12 @@ struct CircuitView: View {
         VStack {
             // Title and Info Icon
             ZStack {
-                // Center the title
                 Text("Circuit Design")
                     .font(.largeTitle)
                     .dynamicTypeSize(.xLarge)
-                
-                // Place the info button on the right
                 HStack {
                     Spacer()
-                    Button(action: {
-                        showInfo = true
-                    }) {
+                    Button(action: { showInfo = true }) {
                         Image(systemName: "info.circle")
                             .font(.title2)
                             .foregroundColor(.blue)
@@ -328,30 +320,28 @@ struct CircuitView: View {
                             Text("Circuit Design")
                                 .font(.headline)
                                 .padding(.bottom, 5)
-                            Text("Design realistic circuits like MUX21, C17, and majority gates using Silicon Dangling Bonds (SiDBs). Progress through design stages, including initial defect placement, skeleton setup, and final gate design. Use zoom controls to inspect layouts in detail during computation, ensuring precise and efficient designs.")
-                            Button("Close") {
-                                showInfo = false
-                            }
-                            .frame(maxWidth: .infinity, alignment: .trailing)
-                            .padding(.top, 10)
-                            .font(.callout)
+                            Text("Design realistic circuits like MUX21, C17, and majority gates using Silicon Dangling Bonds (SiDBs). Progress through design stages, including initial defect placement, skeleton setup, and final gate design.")
+                            Button("Close") { showInfo = false }
+                                .frame(maxWidth: .infinity, alignment: .trailing)
+                                .padding(.top, 10)
+                                .font(.callout)
                         }
                         .padding()
                         .frame(width: UIScreen.main.bounds.width * 0.8)
                     }
                 }
-                .padding(.trailing, 10) // Add padding to avoid overlap
+                .padding(.trailing, 10)
             }
             .padding(.top, 20)
             .padding(.horizontal)
+            .frame(maxWidth: .infinity, alignment: .center) // Center title
 
+            // Circuit Selection Buttons
             HStack(spacing: 15) {
                 ForEach(circuits, id: \.self) { circuit in
                     Button(action: {
                         selectedCircuit = circuit
                         designStage = .initial
-                        scale = 1.0
-                        lastScale = 1.0
                     }) {
                         Text(circuit)
                             .font(.headline)
@@ -361,13 +351,14 @@ struct CircuitView: View {
                             .background(selectedCircuit == circuit ? Color.blue : Color.gray)
                             .scaleEffect(selectedCircuit == circuit ? 1.05 : 1.0)
                             .animation(.spring(), value: selectedCircuit)
-                            .lineLimit(1) // Restrict to one line
-                            .minimumScaleFactor(0.8) // Allow text to shrink if needed
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
                             .cornerRadius(10)
                     }
                 }
             }
             .padding()
+            .frame(maxWidth: .infinity, alignment: .center) // Center buttons
 
             Spacer()
             GeometryReader { geometry in
@@ -381,24 +372,13 @@ struct CircuitView: View {
                                     width: geometry.size.width * 0.8,
                                     height: geometry.size.height * 0.8
                                 )
-                                .scaleEffect(scale)
-                                .gesture(
-                                    MagnificationGesture()
-                                        .onChanged { value in
-                                            let delta = value / lastScale
-                                            lastScale = value
-                                            scale *= delta
-                                            scale = min(max(scale, 0.5), 3.0)
-                                        }
-                                        .onEnded { _ in
-                                            lastScale = 1.0
-                                        }
-                                )
+                                .accessibilityLabel("Circuit image for \(selectedCircuit), stage \(designStage)")
                         } else {
                             Color.clear
                                 .frame(width: geometry.size.width, height: geometry.size.height)
                         }
                     }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center) // Center ScrollView content
 
                     if isComputing {
                         VStack(spacing: 25) {
@@ -421,30 +401,29 @@ struct CircuitView: View {
             }
 
             VStack {
-                Button(action: {
-                    startComputation()
-                }) {
+                Button(action: { startComputation() }) {
                     Text(buttonLabel)
                         .font(.headline)
                         .foregroundColor(.white)
                         .padding()
-                        .frame(maxWidth: .infinity) // Make the button take the full width of its container
-                        .frame(height: 50) // Set a consistent height
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 50)
                         .background(buttonColor)
                         .cornerRadius(10)
                         .minimumScaleFactor(0.8)
                 }
                 .disabled(isComputing)
-                .padding(.horizontal, 20) // Add horizontal padding for spacing
+                .padding(.horizontal, 20)
             }
             .padding()
+            .frame(maxWidth: .infinity, alignment: .center) // Center button
 
             Spacer()
         }
         .onAppear {
             designStage = .initial
-            scale = 1.0
         }
+        .preferredColorScheme(.light) // Ensure light mode
     }
 
     var buttonLabel: String {
@@ -474,7 +453,6 @@ struct CircuitView: View {
     func startComputation() {
         isComputing = true
         computationProgress = 0.0
-
         let computationTime = designStage == .skeletons ? 1.0 : 0.5
 
         withAnimation(.linear(duration: computationTime)) {
@@ -493,8 +471,6 @@ struct CircuitView: View {
             case .skeletons: designStage = .final
             case .final:
                 designStage = .initial
-                scale = 1.0
-                lastScale = 1.0
             }
             isComputing = false
         }

@@ -12,6 +12,7 @@ struct NanoLogicApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .preferredColorScheme(.light)
         }
     }
 }
