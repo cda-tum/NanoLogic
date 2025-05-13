@@ -17,32 +17,32 @@ struct ContentView: View {
                         ],
                         spacing: 8
                     ) {
-                        // Navigation tiles with distinct colors
+                        // Navigation tiles with new color scheme
                         NavigationTile(
                             iconName: "gearshape.fill",
                             title: "Simulation",
-                            color: .blue,
+                            color: .teal, // Changed from .blue
                             destination: SimulationView(),
                             size: min(geometry.size.width, geometry.size.height) * 0.45
                         )
                         NavigationTile(
                             iconName: "puzzlepiece.fill",
                             title: "Logic Design",
-                            color: .green,
+                            color: .indigo, // Changed from .green
                             destination: DesignView(fieldName: "Logic Design"),
                             size: min(geometry.size.width, geometry.size.height) * 0.45
                         )
                         NavigationTile(
                             iconName: "bolt.fill",
                             title: "Circuit Design",
-                            color: .orange,
+                            color: .red, // Changed from .orange
                             destination: CircuitView(),
                             size: min(geometry.size.width, geometry.size.height) * 0.45
                         )
                         NavigationTile(
                             iconName: "chart.bar.fill",
                             title: "Analysis",
-                            color: .purple,
+                            color: .gray, // Changed from .purple
                             destination: AnalysisView(),
                             size: min(geometry.size.width, geometry.size.height) * 0.45
                         )
@@ -158,7 +158,7 @@ struct SimulationView: View {
                                     Text("Physical Simulation")
                                         .font(.headline)
                                         .padding(.bottom, 5)
-                                    Text("As a critical component of any design validation workflow, physical simulation serves as the basis for verifying the behavior of circuit layouts prior to fabrication, bridging the gap between software and hardware. This physical simulation aims to predict the charge distribution that encodes the bit information. Green dots represent negatively charged SiDBs, while transparent ones represent neutrally charged ones.")
+                                    Text("Simulate the physical behavior of circuit layouts before fabrication, bridging the gap between design and hardware. This simulation predicts the charge distribution that encodes bit information. Green dots represent negatively charged Silicon Dangling Bonds (SiDBs), while transparent dots indicate neutral charges. Press the button to run the simulation and explore charge distributions under different energy values.")
                                     Button("Close") {
                                         showInfo = false
                                     }
@@ -180,7 +180,7 @@ struct SimulationView: View {
                     Image(currentLayoutImage)
                         .resizable()
                         .scaledToFit()
-                        .frame(width: geometry.size.width * 0.9) // Scale width, let height adjust
+                        .frame(width: geometry.size.width * 0.8) // Scale width, let height adjust
                         .frame(maxWidth: .infinity, alignment: .center) // Center image
                         .padding(.vertical, 10)
                     
@@ -285,7 +285,7 @@ struct CircuitView: View {
     @State var computationProgress: CGFloat = 0
     @State private var showInfo: Bool = false // Controls the info popover
 
-    let circuits = ["mux21", "c17", "majority"]
+    let circuits = ["mux21", "c17", "maj"]
 
     enum DesignStage {
         case initial
@@ -328,7 +328,7 @@ struct CircuitView: View {
                             Text("Circuit Design")
                                 .font(.headline)
                                 .padding(.bottom, 5)
-                            Text("This interface enables the design of circuits (e.g., mux21, c17, majority) using Silicon Dangling Bonds (SiDBs). Select a circuit and progress through design stages: initial defects, skeleton placement, and final gate design. Zoom in/out to inspect layouts during computation.")
+                            Text("Design realistic circuits like MUX21, C17, and majority gates using Silicon Dangling Bonds (SiDBs). Progress through design stages, including initial defect placement, skeleton setup, and final gate design. Use zoom controls to inspect layouts in detail during computation, ensuring precise and efficient designs.")
                             Button("Close") {
                                 showInfo = false
                             }
@@ -557,7 +557,7 @@ struct DesignView: View {
                                     Text("Logic Design")
                                         .font(.headline)
                                         .padding(.bottom, 5)
-                                    Text("Gates are the fundamental building blocks of logic in every circuit technology, making their automatic and efficient design essential. The design process begins with predefined input and output wires, aiming to strategically place Silicon Dangling Bonds (SiDBs) within the area to encode the desired logic through charge distribution.")
+                                    Text("Create logic gates by strategically placing Silicon Dangling Bonds (SiDBs). Start with predefined input and output wires and optimize the placement of SiDBs to encode desired logic through charge distribution. This tool automates the process, ensuring accurate and efficient gate designs.")
                                     Text("Here, an AND gate, designed and validated through physical simulation, is constructed using four SiDBs positioned in the central region.")
                                     Button("Close") {
                                         showInfo = false
@@ -729,7 +729,7 @@ struct AnalysisView: View {
                                     Text("Analysis")
                                         .font(.headline)
                                         .padding(.bottom, 5)
-                                    Text("This analysis interface allows you to evaluate the performance of circuit layouts under different conditions. Choose between the Temperature Simulation to analyze thermal effects on SiDB logic or the Operational Domain to assess robustness against material imperfections.")
+                                    Text("Analyze the performance of circuit layouts under different conditions. Choose Temperature Simulation to study the effects of thermal variations on SiDB logic, or use Operational Domain Analysis to evaluate robustness against material imperfections. Optimize designs for real-world reliability with these advanced evaluation tools.")
                                     Button("Close") {
                                         showInfo = false
                                     }
