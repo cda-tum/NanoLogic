@@ -158,7 +158,7 @@ struct SimulationView: View {
                                     Text("Physical Simulation")
                                         .font(.headline)
                                         .padding(.bottom, 5)
-                                    Text("Simulate the physical behavior of circuit layouts before fabrication, bridging the gap between design and hardware. This simulation predicts the charge distribution that encodes bit information. Green dots represent negatively charged Silicon Dangling Bonds (SiDBs), while transparent dots indicate neutral charges. Press the button to run the simulation and explore charge distributions under different energy values.")
+                                    Text("Simulate the physical behavior of circuit layouts before fabrication. This simulation predicts the charge distribution that encodes bit information. Green dots represent negatively charged Silicon Dangling Bonds, while transparent dots indicate neutral charges. Press the button to run the simulation and explore charge distributions under different energy values.")
                                     Button("Close") {
                                         showInfo = false
                                     }
@@ -320,7 +320,7 @@ struct CircuitView: View {
                             Text("Circuit Design")
                                 .font(.headline)
                                 .padding(.bottom, 5)
-                            Text("Design realistic circuits like MUX21, C17, and majority gates using Silicon Dangling Bonds (SiDBs). Progress through design stages, including initial defect placement, skeleton setup, and final gate design.")
+                            Text("Design realistic circuits like MUX21, C17, and majority gates using Silicon Dangling Bonds. Progress through design stages, including initial defect placement, skeleton setup, and final gate design.")
                             Button("Close") { showInfo = false }
                                 .frame(maxWidth: .infinity, alignment: .trailing)
                                 .padding(.top, 10)
@@ -532,8 +532,8 @@ struct DesignView: View {
                                     Text("Logic Design")
                                         .font(.headline)
                                         .padding(.bottom, 5)
-                                    Text("Create logic gates by strategically placing Silicon Dangling Bonds (SiDBs). Start with predefined input and output wires and optimize the placement of SiDBs to encode desired logic through charge distribution. This tool automates the process, ensuring accurate and efficient gate designs.")
-                                    Text("Here, an AND gate, designed and validated through physical simulation, is constructed using four SiDBs positioned in the central region.")
+                                    Text("Create logic gates by strategically placing Silicon Dangling Bonds. Start with predefined input and output wires and optimize the placement of Silicon Dangling Bonds to encode desired logic through charge distribution. This tool automates the process, ensuring accurate and efficient gate designs.")
+                                    Text("Here, an AND gate, designed and validated through physical simulation, is constructed using four Silicon Dangling Bonds positioned in the central region.")
                                     Button("Close") {
                                         showInfo = false
                                     }
