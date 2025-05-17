@@ -191,7 +191,7 @@ struct SimulationView: View {
                             .popover(isPresented: $showInfo) {
                                 VStack(alignment: .leading, spacing: 10) {
                                     Text("Physical Simulation").bold() +
-                                    Text(" predicts the charge distribution of the Silicon Dangling Bonds layout. Green dots indicate negatively charged Silicon Dangling Bonds, while transparent dots represent neutral ones. Press the button to run the simulation and explore charge distributions with varying energy values.")
+                                    Text(" predicts the charge distribution of the Silicon Dangling Bonds. Green dots indicate negatively charged Silicon Dangling Bonds, while transparent dots represent neutral ones. Press the button to run the simulation and explore charge distributions with varying energy values.")
                                     Button("Close") {
                                         showInfo = false
                                     }
@@ -351,7 +351,7 @@ struct CircuitView: View {
                     .popover(isPresented: $showInfo) {
                         VStack(alignment: .leading, spacing: 10) {
                             Text("Circuit Design").bold() +
-                                Text(" enables the creation of circuits that account for atomic defects. The process begins by placing and routing a given logic gate-level layout onto a clocked surface. Standard cells are then dynamically designed, integrating atomic defects from the surrounding environment. This workflow progresses through key stages, starting with the strategic placement of defects within the layout, followed by the setup of a foundational design structure that accommodates these defects, and culminating in the final gate design. The result is a circuit that is robust, defect-tolerant, and optimized for real-world atomic-scale imperfections.")
+                                Text(" enables the design of circuits that account for atomic defects. The process begins by placing and routing a given logic gate-level layout onto a clocked surface. Standard cells are then designed \"on-the-fly\", integrating atomic defects from the surrounding environment. The result is a circuit that performs correctly despite real atomic-scale imperfections.")
                             Button("Close") { showInfo = false }
                                 .frame(maxWidth: .infinity, alignment: .trailing)
                                 .padding(.top, 10)
@@ -563,7 +563,7 @@ struct DesignView: View {
                             .popover(isPresented: $showInfo) {
                                 VStack(alignment: .leading, spacing: 10) {
                                     Text("Logic Design").bold() +
-                                    Text(" creates standard cells by placing Silicon Dangling Bonds between input and output wires. The algorithm positions the Silicon Dangling Bonds to satisfy the AND logic function for all input patterns. The design is validated through physical simulation to ensure the correct charge distribution.")
+                                    Text(" creates standard cells by placing Silicon Dangling Bonds between input and output wires. The algorithm positions the Silicon Dangling Bonds to satisfy the given Boolean function for all input patterns. The design is validated through physical simulation to ensure the correct charge distribution.")
                                     Button("Close") {
                                         showInfo = false
                                     }
@@ -732,7 +732,7 @@ struct AnalysisView: View {
                             .popover(isPresented: $showInfo) {
                                 VStack(alignment: .leading, spacing: 10) {
                                     Text("Analysis").bold() +
-                                    Text(" evaluates the performance of standard cells under varying conditions. Temperature simulation examines the impact of thermal variations on Silicon Dangling Bond logic, while Operational Domain Analysis assesses robustness against material imperfections. These advanced evaluation tools help optimize designs for real-world reliability.")
+                                    Text(" evaluates the performance of Silicon Dangling Bond logic under varying conditions. Temperature simulation examines the impact of thermal variations, while Operational Domain Analysis assesses robustness against material imperfections. These evaluation tools help optimize designs for real-world reliability.")
                                     Button("Close") {
                                         showInfo = false
                                     }
