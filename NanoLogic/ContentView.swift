@@ -1,59 +1,94 @@
 import SwiftUI
 import AVKit
 
+extension Color {
+    static let goldYellow = Color(red: 242/255, green: 176/255, blue: 30/255)
+    static let strongRed = Color(red: 198/255, green: 40/255, blue: 40/255)
+    static let deepGreen = Color(red: 61/255, green: 122/255, blue: 11/255)
+    static let richPurple = Color(red: 142/255, green: 31/255, blue: 130/255)
+}
+
 struct ContentView: View {
+    @Environment(\.openURL) private var openURL // Access openURL environment variable
+    
     var body: some View {
         NavigationStack {
             GeometryReader { geometry in
                 ZStack {
                     Color(.systemBackground)
-                        .ignoresSafeArea() // Full-screen adaptive background
+                        .ignoresSafeArea()
                     
-                    // Responsive LazyVGrid
-                    LazyVGrid(
-                        columns: [
-                            GridItem(.flexible(), spacing: 8),
-                            GridItem(.flexible(), spacing: 8)
-                        ],
-                        spacing: 8
-                    ) {
-                        // Navigation tiles with new color scheme
-                        NavigationTile(
-                            iconName: "gearshape.fill",
-                            title: "Simulation",
-                            color: .teal, // Changed from .blue
-                            destination: SimulationView(),
-                            size: min(geometry.size.width, geometry.size.height) * 0.45
-                        )
-                        NavigationTile(
-                            iconName: "puzzlepiece.fill",
-                            title: "Logic Design",
-                            color: .indigo, // Changed from .green
-                            destination: DesignView(fieldName: "Logic Design"),
-                            size: min(geometry.size.width, geometry.size.height) * 0.45
-                        )
-                        NavigationTile(
-                            iconName: "bolt.fill",
-                            title: "Circuit Design",
-                            color: .red, // Changed from .orange
-                            destination: CircuitView(),
-                            size: min(geometry.size.width, geometry.size.height) * 0.45
-                        )
-                        NavigationTile(
-                            iconName: "chart.bar.fill",
-                            title: "Analysis",
-                            color: .gray, // Changed from .purple
-                            destination: AnalysisView(),
-                            size: min(geometry.size.width, geometry.size.height) * 0.45
-                        )
+                    VStack(spacing: 12) {
+                        Image("logo-nanotech-toolkit-high")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(maxWidth: geometry.size.width * 0.6)
+                            .padding(.top, 50) // Note: You had 50 here, not 20 as in my previous response
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .accessibilityLabel("Nanotech Toolkit Logo")
+                            .onTapGesture {
+                                if let url = URL(string:"https://www.cda.cit.tum.de/research/nanotech/") { // Replace with your URL
+                                    openURL(url)
+                                }
+                            }
+                        
+                        Spacer()
+                            .frame(minHeight: 8, maxHeight: 20)
+                        
+                        LazyVGrid(
+                            columns: [
+                                GridItem(.flexible(), spacing: 8),
+                                GridItem(.flexible(), spacing: 8)
+                            ],
+                            alignment: .center,
+                            spacing: Gutter()
+                        ) {
+                            NavigationTile(
+                                iconName: "gearshape.fill",
+                                title: "Simulation",
+                                color: .goldYellow,
+                                destination: SimulationView(),
+                                size: min(geometry.size.width, geometry.size.height) * 0.45
+                            )
+                            NavigationTile(
+                                iconName: "puzzlepiece.fill",
+                                title: "Logic Design",
+                                color: .strongRed,
+                                destination: DesignView(fieldName: "Logic Design"),
+                                size: min(geometry.size.width, geometry.size.height) * 0.45
+                            )
+                            NavigationTile(
+                                iconName: "bolt.fill",
+                                title: "Circuit Design",
+                                color: .deepGreen,
+                                destination: CircuitView(),
+                                size: min(geometry.size.width, geometry.size.height) * 0.45
+                            )
+                            NavigationTile(
+                                iconName: "chart.bar.fill",
+                                title: "Analysis",
+                                color: .richPurple,
+                                destination: AnalysisView(),
+                                size: min(geometry.size.width, geometry.size.height) * 0.45
+                            )
+                        }
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 12)
+                        
+                        Spacer()
                     }
-                    .padding(.all, 12) // Padding for edge spacing
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
             }
             .navigationBarHidden(true)
         }
     }
+    
+    func Gutter() -> CGFloat {
+        return 8
+    }
 }
+
 
 // Reusable NavigationTile view with customizable color
 struct NavigationTile<Destination: View>: View {
@@ -155,10 +190,8 @@ struct SimulationView: View {
                             }
                             .popover(isPresented: $showInfo) {
                                 VStack(alignment: .leading, spacing: 10) {
-                                    Text("Physical Simulation")
-                                        .font(.headline)
-                                        .padding(.bottom, 5)
-                                    Text("Simulate the physical behavior of circuit layouts before fabrication. This simulation predicts the charge distribution that encodes bit information. Green dots represent negatively charged Silicon Dangling Bonds, while transparent dots indicate neutral charges. Press the button to run the simulation and explore charge distributions under different energy values.")
+                                    Text("Physical Simulation").bold() +
+                                    Text(" predicts the charge distribution of the Silicon Dangling Bonds layout. Green dots indicate negatively charged Silicon Dangling Bonds, while transparent dots represent neutral ones. Press the button to run the simulation and explore charge distributions with varying energy values.")
                                     Button("Close") {
                                         showInfo = false
                                     }
@@ -317,10 +350,8 @@ struct CircuitView: View {
                     }
                     .popover(isPresented: $showInfo) {
                         VStack(alignment: .leading, spacing: 10) {
-                            Text("Circuit Design")
-                                .font(.headline)
-                                .padding(.bottom, 5)
-                            Text("Design realistic circuits like MUX21, C17, and majority gates using Silicon Dangling Bonds. Progress through design stages, including initial defect placement, skeleton setup, and final gate design.")
+                            Text("Circuit Design").bold() +
+                                Text(" enables the creation of circuits that account for atomic defects. The process begins by placing and routing a given logic gate-level layout onto a clocked surface. Standard cells are then dynamically designed, integrating atomic defects from the surrounding environment. This workflow progresses through key stages, starting with the strategic placement of defects within the layout, followed by the setup of a foundational design structure that accommodates these defects, and culminating in the final gate design. The result is a circuit that is robust, defect-tolerant, and optimized for real-world atomic-scale imperfections.")
                             Button("Close") { showInfo = false }
                                 .frame(maxWidth: .infinity, alignment: .trailing)
                                 .padding(.top, 10)
@@ -334,10 +365,10 @@ struct CircuitView: View {
             }
             .padding(.top, 20)
             .padding(.horizontal)
-            .frame(maxWidth: .infinity, alignment: .center) // Center title
+            .frame(maxWidth: .infinity, alignment: .center)
 
             // Circuit Selection Buttons
-            HStack(spacing: 15) {
+            HStack(spacing: Gutter()) {
                 ForEach(circuits, id: \.self) { circuit in
                     Button(action: {
                         selectedCircuit = circuit
@@ -358,20 +389,17 @@ struct CircuitView: View {
                 }
             }
             .padding()
-            .frame(maxWidth: .infinity, alignment: .center) // Center buttons
+            .frame(maxWidth: .infinity, alignment: .center)
 
             Spacer()
             GeometryReader { geometry in
                 ZStack {
                     if let imageName = currentImage, !isComputing {
+                        let imageSize = min(geometry.size.width, geometry.size.height) * 1.0 // Increased size
                         Image(imageName)
                             .resizable()
                             .scaledToFit()
-                            .frame(
-                                width: geometry.size.width * 0.8,
-                                height: geometry.size.height * 0.8
-                            )
-                            .allowsHitTesting(false) // Prevent touch interactions
+                            .frame(width: imageSize, height: imageSize)
                             .accessibilityLabel("Circuit image for \(selectedCircuit), stage \(designStage)")
                     } else {
                         Color.clear
@@ -396,9 +424,10 @@ struct CircuitView: View {
                         }
                     }
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center) // Center image
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             }
 
+            // Button
             VStack {
                 Button(action: { startComputation() }) {
                     Text(buttonLabel)
@@ -415,14 +444,14 @@ struct CircuitView: View {
                 .padding(.horizontal, 20)
             }
             .padding()
-            .frame(maxWidth: .infinity, alignment: .center) // Center button
+            .frame(maxWidth: .infinity, alignment: .center)
 
             Spacer()
         }
         .onAppear {
             designStage = .initial
         }
-        .preferredColorScheme(.light) // Ensure light mode
+        .preferredColorScheme(.light)
     }
 
     var buttonLabel: String {
@@ -473,6 +502,10 @@ struct CircuitView: View {
             }
             isComputing = false
         }
+    }
+
+    func Gutter() -> CGFloat {
+        return horizontalSizeClass == .compact ? 10 : 15
     }
 }
 
@@ -529,11 +562,8 @@ struct DesignView: View {
                             }
                             .popover(isPresented: $showInfo) {
                                 VStack(alignment: .leading, spacing: 10) {
-                                    Text("Logic Design")
-                                        .font(.headline)
-                                        .padding(.bottom, 5)
-                                    Text("Create logic gates by strategically placing Silicon Dangling Bonds. Start with predefined input and output wires and optimize the placement of Silicon Dangling Bonds to encode desired logic through charge distribution. This tool automates the process, ensuring accurate and efficient gate designs.")
-                                    Text("Here, an AND gate, designed and validated through physical simulation, is constructed using four Silicon Dangling Bonds positioned in the central region.")
+                                    Text("Logic Design").bold() +
+                                    Text(" creates standard cells by placing Silicon Dangling Bonds between input and output wires. The algorithm positions the Silicon Dangling Bonds to satisfy the AND logic function for all input patterns. The design is validated through physical simulation to ensure the correct charge distribution.")
                                     Button("Close") {
                                         showInfo = false
                                     }
@@ -701,10 +731,8 @@ struct AnalysisView: View {
                             }
                             .popover(isPresented: $showInfo) {
                                 VStack(alignment: .leading, spacing: 10) {
-                                    Text("Analysis")
-                                        .font(.headline)
-                                        .padding(.bottom, 5)
-                                    Text("Analyze the performance of circuit layouts under different conditions. Choose Temperature Simulation to study the effects of thermal variations on SiDB logic, or use Operational Domain Analysis to evaluate robustness against material imperfections. Optimize designs for real-world reliability with these advanced evaluation tools.")
+                                    Text("Analysis").bold() +
+                                    Text(" evaluates the performance of standard cells under varying conditions. Temperature simulation examines the impact of thermal variations on Silicon Dangling Bond logic, while Operational Domain Analysis assesses robustness against material imperfections. These advanced evaluation tools help optimize designs for real-world reliability.")
                                     Button("Close") {
                                         showInfo = false
                                     }
