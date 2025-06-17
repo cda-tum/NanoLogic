@@ -41,4 +41,5 @@ docset.xar
 *.log
 *.tmp
 
-
+# IntelliJ IDEA / Android Studio
+.idea/
