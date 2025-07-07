@@ -12,12 +12,13 @@ struct SplashScreenView: View {
             } else {
                 Color(.systemBackground)
                     .ignoresSafeArea()
-                Image("logo-nanotech-toolkit-high")
-                    .resizable()
-                    .scaledToFit()
+                Text("NanoLogic")
+                    .font(.custom("Futura-Bold", size: 36))
+                    .fontWeight(.bold)
+                    .foregroundColor(.primary)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .padding(50)
-                    .accessibilityLabel("Nanotech Toolkit Splash Screen Logo")
+                    .accessibilityLabel("NanoLogic Splash Screen")
                     .opacity(opacity)
             }
         }
@@ -47,6 +48,7 @@ struct ContentView: View {
     @State private var showInfo: Bool = false
     @State private var showSimulationWelcome: Bool = false
     @State private var navigateToSimulation: Bool = false
+    @State private var pulse: Bool = false
     @AppStorage("hasSeenSimulationWelcome") private var hasSeenSimulationWelcome: Bool = false
 
     var body: some View {
@@ -56,11 +58,11 @@ struct ContentView: View {
                     Color(.systemBackground)
                         .ignoresSafeArea()
 
-                    VStack(spacing: 12) {
+                    VStack(spacing: 0) {
                         Image("logo-nanotech-toolkit-high")
                             .resizable()
                             .scaledToFit()
-                            .frame(maxWidth: geometry.size.width * 0.6)
+                            .frame(maxWidth: geometry.size.width * 0.9)
                             .padding(.top, 50)
                             .frame(maxWidth: .infinity, alignment: .center)
                             .accessibilityLabel("Nanotech Toolkit Logo")
@@ -73,112 +75,135 @@ struct ContentView: View {
                         Spacer()
                             .frame(minHeight: 8, maxHeight: 20)
 
-                        ZStack {
-                            LazyVGrid(
-                                columns: [
-                                    GridItem(.flexible(), spacing: 8),
-                                    GridItem(.flexible(), spacing: 8)
-                                ],
-                                alignment: .center,
-                                spacing: Gutter()
-                            ) {
-                                NavigationTile(
-                                    iconName: "gearshape.fill",
-                                    title: "Simulation",
-                                    color: .goldYellow,
-                                    destination: SimulationView(),
-                                    size: min(geometry.size.width, geometry.size.height) * 0.45
-                                )
-                                .onTapGesture {
-                                    if !hasSeenSimulationWelcome {
-                                        showSimulationWelcome = true
-                                    } else {
-                                        navigateToSimulation = true
-                                    }
-                                }
-                                .accessibilityLabel("Simulation")
-                                .accessibilityHint("Tap to view the simulation welcome message before navigating")
+                        let safeWidth = geometry.size.width
+                        let tileSize = (safeWidth > 0) ? max((safeWidth - 16 * 3) / 2, 120) : 120
 
-                                NavigationTile(
-                                    iconName: "puzzlepiece.fill",
-                                    title: "Logic Design",
-                                    color: .strongRed,
-                                    destination: DesignView(fieldName: "Logic Design"),
-                                    size: min(geometry.size.width, geometry.size.height) * 0.45
-                                )
-                                NavigationTile(
-                                    iconName: "bolt.fill",
-                                    title: "Circuit Design",
-                                    color: .deepGreen,
-                                    destination: CircuitView(),
-                                    size: min(geometry.size.width, geometry.size.height) * 0.45
-                                )
-                                NavigationTile(
-                                    iconName: "chart.bar.fill",
-                                    title: "Analysis",
-                                    color: .richPurple,
-                                    destination: AnalysisView(),
-                                    size: min(geometry.size.width, geometry.size.height) * 0.45
-                                )
-                            }
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 12)
-
-                            Button(action: {
-                                showInfo = true
-                            }) {
-                                Image(systemName: "info.circle.fill")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 40, height: 40)
-                                    .foregroundColor(.blue)
-                                    .background(
-                                        Circle()
-                                            .fill(Color.white)
-                                            .frame(width: 50, height: 50)
-                                            .shadow(radius: 3)
-                                    )
-                            }
-                            .popover(isPresented: $showInfo) {
-                                VStack(alignment: .leading, spacing: 10) {
-                                    Text("Silicon Dangling Bond Logic")
-                                        .bold()
-                                        .font(.title2)
-                                        .lineLimit(1)
-                                        .minimumScaleFactor(0.8)
-                                    HStack(spacing: 10) {
-                                        Image("sidb_tech")
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(maxWidth: geometry.size.width * 0.85)
-                                            .padding(.vertical, 5)
-                                            .accessibilityLabel("Illustration of Silicon Substrate")
-                                    }
-                                    .frame(maxWidth: .infinity, alignment: .center)
-                                    Text("Silicon Dangling Bond Logic is an emerging technology that promises computation on the atomic level with unmatched energy efficiency. Silicon Dangling Bonds are on hydrogen-passivated silicon. With an atomically precise STM tip, hydrogen atoms can be removed, creating a dangling bond that can be charged positively, neutrally, or negatively depending on the electrostatic interaction. This allows for the design of bits, logic gates, and circuits at the atomic scale.")
-                                    HStack(spacing: 10) {
-                                        Button("Close") {
-                                            showInfo = false
-                                        }
-                                        .font(.callout)
-                                        .padding(.vertical, 8)
-                                        .padding(.horizontal, 16)
-                                        .background(Color.gray)
-                                        .foregroundColor(.white)
-                                        .cornerRadius(8)
-                                    }
-                                    .frame(maxWidth: .infinity, alignment: .trailing)
-                                    .padding(.top, 10)
+                        LazyVGrid(
+                            columns: [
+                                GridItem(.flexible(), spacing: 16),
+                                GridItem(.flexible(), spacing: 16)
+                            ],
+                            spacing: 16
+                        ) {
+                            NavigationTile(
+                                iconName: "gearshape.fill",
+                                title: "Simulation",
+                                color: .goldYellow,
+                                destination: SimulationView(),
+                                size: tileSize
+                            )
+                            .onTapGesture {
+                                if !hasSeenSimulationWelcome {
+                                    showSimulationWelcome = true
+                                } else {
+                                    navigateToSimulation = true
                                 }
-                                .padding()
-                                .frame(width: geometry.size.width * 0.8)
                             }
-                            .accessibilityLabel("Silicon Dangling Bond Logic Overview")
+
+                            NavigationTile(
+                                iconName: "puzzlepiece.fill",
+                                title: "Logic Design",
+                                color: .strongRed,
+                                destination: DesignView(fieldName: "Logic Design"),
+                                size: tileSize
+                            )
+                            NavigationTile(
+                                iconName: "bolt.fill",
+                                title: "Circuit Design",
+                                color: .deepGreen,
+                                destination: CircuitView(),
+                                size: tileSize
+                            )
+                            NavigationTile(
+                                iconName: "chart.bar.fill",
+                                title: "Analysis",
+                                color: .richPurple,
+                                destination: AnalysisView(),
+                                size: tileSize
+                            )
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.top, 16)
+
+                        Button(action: {
+                            withAnimation {
+                                showInfo.toggle()
+                            }
+                        }) {
+                            Image(systemName: "info.circle.fill")
+                                .font(.title)
+                                .foregroundColor(.white)
+                                .frame(width: 58, height: 58)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Color.blue)
+                                        .shadow(radius: 3)
+                                )
+                                .scaleEffect(pulse ? 1.05 : 1.0)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                        .padding(.top, 12)
+                        .padding(.trailing, 16)
+                        .onAppear {
+                            withAnimation(.easeInOut(duration: 1.0).repeatForever(autoreverses: true)) {
+                                pulse = true
+                            }
                         }
 
                         Spacer()
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+                    // Custom right-aligned info panel overlay
+                    if showInfo {
+                        Color.black.opacity(0.4)
+                            .ignoresSafeArea()
+                            .onTapGesture {
+                                withAnimation {
+                                    showInfo = false
+                                }
+                            }
+
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("Silicon Dangling Bond Logic")
+                                .bold()
+                                .font(.title2)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+
+                            Image("sidb_tech")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(maxWidth: geometry.size.width * 0.8)
+                                .accessibilityLabel("Illustration of Silicon Substrate")
+
+                            Text("Silicon Dangling Bond Logic is an emerging technology that promises computation on the atomic level with unmatched energy efficiency. Silicon Dangling Bonds are on hydrogen-passivated silicon. With an atomically precise STM tip, hydrogen atoms can be removed, creating a dangling bond that can be charged positively, neutrally, or negatively depending on the electrostatic interaction. This allows for the design of bits, logic gates, and circuits at the atomic scale.")
+                                .font(.body)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+
+                            Button("Close") {
+                                withAnimation {
+                                    showInfo = false
+                                }
+                            }
+                            .font(.callout)
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 16)
+                            .background(Color.gray)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        .padding(20)
+                        .background(Color(.systemBackground))
+                        .cornerRadius(12)
+                        .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.6)
+                        .shadow(radius: 10)
+                        .transition(.move(edge: .trailing))
+                        .zIndex(1)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                        .padding(.top, 80)
+                        .padding(.trailing, 20)
+                    }
                 }
                 .sheet(isPresented: $showSimulationWelcome) {
                     VStack(alignment: .leading, spacing: 15) {
@@ -201,7 +226,6 @@ struct ContentView: View {
                         .cornerRadius(8)
                         .frame(maxWidth: .infinity, alignment: .center)
                         .padding(.top, 10)
-                        .accessibilityLabel("Acknowledge simulation welcome message")
                     }
                     .padding()
                     .frame(width: geometry.size.width * 0.9)
@@ -214,10 +238,6 @@ struct ContentView: View {
             .navigationBarHidden(true)
         }
         .preferredColorScheme(.light)
-    }
-
-    func Gutter() -> CGFloat {
-        return 8
     }
 }
 
@@ -294,16 +314,16 @@ struct SimulationView: View {
                             }) {
                                 Image(systemName: "info.circle.fill")
                                     .font(.title)
-                                    .foregroundColor(.blue)
+                                    .foregroundColor(.white)
                                     .frame(width: 48, height: 48)
                                     .background(
-                                        Circle()
-                                            .fill(Color.white)
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .fill(Color.blue)
                                             .shadow(radius: 3)
                                     )
                                     .scaleEffect(pulseScale)
                                     .animation(
-                                        .easeInOut(duration: 0.4)
+                                        .easeInOut(duration: 1.0)
                                         .repeatForever(autoreverses: true),
                                         value: pulseScale
                                     )
@@ -479,16 +499,16 @@ struct CircuitView: View {
                     Button(action: { showInfo = true }) {
                         Image(systemName: "info.circle.fill")
                             .font(.title)
-                            .foregroundColor(.blue)
+                            .foregroundColor(.white)
                             .frame(width: 48, height: 48)
                             .background(
-                                Circle()
-                                    .fill(Color.white)
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(Color.blue)
                                     .shadow(radius: 3)
                             )
                             .scaleEffect(pulseScale)
                             .animation(
-                                .easeInOut(duration: 0.4)
+                                .easeInOut(duration: 1.0)
                                 .repeatForever(autoreverses: true),
                                 value: pulseScale
                             )
@@ -717,16 +737,16 @@ struct DesignView: View {
                             }) {
                                 Image(systemName: "info.circle.fill")
                                     .font(.title)
-                                    .foregroundColor(.blue)
+                                    .foregroundColor(.white)
                                     .frame(width: 48, height: 48)
                                     .background(
-                                        Circle()
-                                            .fill(Color.white)
-                                            .shadow(radius: 3)
+                                        RoundedRectangle(cornerRadius: 12)
+                                        .fill(Color.blue)
+                                        .shadow(radius: 3)
                                     )
                                     .scaleEffect(pulseScale)
                                     .animation(
-                                        .easeInOut(duration: 0.4)
+                                        .easeInOut(duration: 1.0)
                                         .repeatForever(autoreverses: true),
                                         value: pulseScale
                                     )
@@ -911,16 +931,16 @@ struct AnalysisView: View {
                             }) {
                                 Image(systemName: "info.circle.fill")
                                     .font(.title)
-                                    .foregroundColor(.blue)
+                                    .foregroundColor(.white)
                                     .frame(width: 48, height: 48)
                                     .background(
-                                        Circle()
-                                            .fill(Color.white)
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .fill(Color.blue)
                                             .shadow(radius: 3)
                                     )
                                     .scaleEffect(pulseScale)
                                     .animation(
-                                        .easeInOut(duration: 0.4)
+                                        .easeInOut(duration: 1.0)
                                         .repeatForever(autoreverses: true),
                                         value: pulseScale
                                     )
@@ -1046,45 +1066,82 @@ struct OperationalDomainView: View {
         }
         .pickerStyle(SegmentedPickerStyle())
     }
-    
+
     var parameterSelectionSection: some View {
-        GeometryReader { geometry in
-            VStack(spacing: 15) {
-                if let svgName = svgFileName {
-                    Image(svgName)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(maxWidth: max(geometry.size.width * 0.9, 600))
-                        .padding(.horizontal)
-                        .accessibilityLabel("Charge distribution for ε_r \(String(format: "%.1f", epsilonR)) and λ_tf \(String(format: "%.1f", lambdaTF))")
-                } else {
-                    Text("No matching PNG found")
-                        .font(.subheadline)
-                        .foregroundColor(.red)
-                }
-                
-                VStack(spacing: 10) {
-                    VStack(spacing: 8) {
-                        Slider(value: $lambdaTF, in: 1.0...10.0, step: 0.5)
-                            .frame(width: geometry.size.width * 0.8)
-                            .tint(.blue)
-                        Text("λ\(Text("tf").font(.footnote).baselineOffset(-5)): \(String(format: "%.1f", lambdaTF))")
+        let isWideScreen = UIScreen.main.bounds.width > 700
+        
+        return Group {
+            if isWideScreen {
+                // iPad or wide screen layout
+                HStack(alignment: .center, spacing: 40) {
+                    if let svgName = svgFileName {
+                        Image(svgName)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(maxWidth: 400, maxHeight: 400)
+                            .accessibilityLabel("Charge distribution for ε_r \(String(format: "%.1f", epsilonR)) and λ_tf \(String(format: "%.1f", lambdaTF))")
+                    } else {
+                        Text("No matching PNG found")
                             .font(.subheadline)
+                            .foregroundColor(.red)
                     }
-                    
-                    VStack(spacing: 8) {
-                        Slider(value: $epsilonR, in: 1.0...10.0, step: 0.5)
-                            .frame(width: geometry.size.width * 0.8)
-                            .tint(.blue)
-                        Text("ε\(Text("r").font(.footnote).baselineOffset(-5)): \(String(format: "%.1f", epsilonR))")
-                            .font(.subheadline)
+
+                    VStack(spacing: 20) {
+                        VStack(spacing: 8) {
+                            Slider(value: $lambdaTF, in: 1.0...10.0, step: 0.5)
+                                .tint(.blue)
+                                .frame(width: 300)
+                            Text("λ\(Text("tf").font(.footnote).baselineOffset(-5)): \(String(format: "%.1f", lambdaTF))")
+                                .font(.subheadline)
+                        }
+
+                        VStack(spacing: 8) {
+                            Slider(value: $epsilonR, in: 1.0...10.0, step: 0.5)
+                                .tint(.blue)
+                                .frame(width: 300)
+                            Text("ε\(Text("r").font(.footnote).baselineOffset(-5)): \(String(format: "%.1f", epsilonR))")
+                                .font(.subheadline)
+                        }
                     }
                 }
-                .padding(.horizontal, geometry.size.width * 0.1)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 40)
+            } else {
+                // iPhone or narrow layout
+                VStack(spacing: 30) {
+                    if let svgName = svgFileName {
+                        Image(svgName)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(maxWidth: 300, maxHeight: 300)
+                            .accessibilityLabel("Charge distribution for ε_r \(String(format: "%.1f", epsilonR)) and λ_tf \(String(format: "%.1f", lambdaTF))")
+                    } else {
+                        Text("No matching PNG found")
+                            .font(.subheadline)
+                            .foregroundColor(.red)
+                    }
+
+                    VStack(spacing: 20) {
+                        VStack(spacing: 6) {
+                            Slider(value: $lambdaTF, in: 1.0...10.0, step: 0.5)
+                                .tint(.blue)
+                            Text("λ\(Text("tf").font(.footnote).baselineOffset(-5)): \(String(format: "%.1f", lambdaTF))")
+                                .font(.subheadline)
+                        }
+
+                        VStack(spacing: 6) {
+                            Slider(value: $epsilonR, in: 1.0...10.0, step: 0.5)
+                                .tint(.blue)
+                            Text("ε\(Text("r").font(.footnote).baselineOffset(-5)): \(String(format: "%.1f", epsilonR))")
+                                .font(.subheadline)
+                        }
+                    }
+                    .padding(.horizontal)
+                }
+                .padding(.vertical)
             }
-            .padding(.vertical, 10)
         }
-        .frame(minHeight: 500)
+        .frame(maxWidth: .infinity)
     }
 
     var algorithmSimulationSection: some View {
@@ -1161,7 +1218,10 @@ struct OperationalDomainView: View {
     @ViewBuilder
     func playPauseButton(player: Binding<AVPlayer?>, isPlaying: Binding<Bool>, videoName: String) -> some View {
         Button(action: {
-            guard let player = player.wrappedValue else { print("No player for \(videoName)"); return }
+            guard let player = player.wrappedValue else {
+                print("No player for \(videoName)")
+                return
+            }
             if isPlaying.wrappedValue {
                 player.pause()
             } else {
@@ -1181,7 +1241,10 @@ struct OperationalDomainView: View {
     @ViewBuilder
     func repeatButton(player: Binding<AVPlayer?>, isPlaying: Binding<Bool>, videoName: String) -> some View {
         Button(action: {
-            guard let player = player.wrappedValue else { print("No player for \(videoName)"); return }
+            guard let player = player.wrappedValue else {
+                print("No player for \(videoName)")
+                return
+            }
             player.seek(to: .zero)
             player.play()
             player.rate = playbackSpeed
