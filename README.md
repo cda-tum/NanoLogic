@@ -14,7 +14,6 @@ NanoLogic is an iOS app designed to deepen your understanding of atomic-scale co
 4. **Circuit Design:** Build and test circuits based on SiDBs, considering the impact of defects.
 
 
-
 ## 🚀 Features
 
 - Interactive simulation of SiDBs at the atomic scale
