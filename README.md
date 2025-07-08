@@ -1,19 +1,21 @@
-# 📱NanoLogic
+# 📱NanoLogic: An Educational App for Atomic-Scale Computing
 
 [![Swift](https://img.shields.io/badge/Swift-5.8-orange.svg?style=flat&logo=swift)](https://swift.org)
 [![Xcode](https://img.shields.io/badge/Xcode-16.3-blue.svg?style=flat&logo=xcode)](https://developer.apple.com/xcode/)
 [![iOS CI](https://img.shields.io/github/actions/workflow/status/Drewniok/NanoLogic/ios.yml?branch=main&label=iOS%20CI&style=flat&color=blue&logo=apple)](https://github.com/Drewniok/NanoLogic/actions/workflows/ios.yml)
 
-NanoLogic is an iOS app designed to deepen your understanding of atomic-scale computing, with a focus on Silicon Dangling Bonds (SiDBs). The app is divided into four main sections, each exploring a unique aspect of SiDB technology:
+<img src="resources/demo_video/demo.gif" alt="Mode Demo" class="dark-mode-img" alt="overview" align="right" width="200" />
 
-<img src="resources/screenshots/overview_picture.png" alt="overview" align="right" width="200"/>
+NanoLogic is an iOS app designed to deepen your understanding of atomic-scale computing, with a focus on Silicon Dangling Bonds (SiDBs). The app is divided into four main sections, each exploring a unique aspect of the SiDB technology:
 
 1. **Simulation:** Explore the physical simulation of Silicon Dangling Bonds to understand their behavior and properties.
 2. **Logic Design:** Learn how to design logic gates using SiDBs.
 3. **Analysis:** Analyze the designed gates and evaluate their performance.
 4. **Circuit Design:** Build and test circuits based on SiDBs, considering the impact of defects.
 
----
+## 📥 Get NanoLogic
+
+NanoLogic is available for download on the [Apple App Store](https://apps.apple.com/de/app/nanologic/id6745813509). Install it on your iPhone or iPad to start exploring atomic-scale computing with Silicon Dangling Bonds!
 
 ## 🚀 Features
 
@@ -24,7 +26,7 @@ NanoLogic is an iOS app designed to deepen your understanding of atomic-scale co
 - Modern Swift 5.8 codebase, built with Xcode 16.3
 - Continuous integration for iOS builds
 
-## 📲 Installation
+## 📲 Installation (For Developers)
 
 1. Clone the repository:
    ```sh
@@ -35,8 +37,8 @@ NanoLogic is an iOS app designed to deepen your understanding of atomic-scale co
 
 ## 🛠️ Requirements
 
-- macOS with Xcode 16.3+
-- iOS 15.0+ device or simulator
+* macOS with Xcode 16.3+
+* iOS 15.0+ device or simulator
 
 ## 🤝 Contributing
 
@@ -51,5 +53,3 @@ Contributions are welcome! Please fork the repository and submit a pull request.
 ## 📄 License
 
 This project is licensed under the MIT License. See the `LICENSE` file for details.
-
----

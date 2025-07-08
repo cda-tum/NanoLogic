@@ -1,6 +1,41 @@
 import SwiftUI
 import AVKit
 
+struct SplashScreenView: View {
+    @State private var isActive = false
+    @State private var opacity = 1.0
+    
+    var body: some View {
+        ZStack {
+            if isActive {
+                ContentView()
+            } else {
+                Color(.systemBackground)
+                    .ignoresSafeArea()
+                Text("NanoLogic")
+                    .font(.custom("Futura-Bold", size: 36))
+                    .fontWeight(.bold)
+                    .foregroundColor(.primary)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .padding(50)
+                    .accessibilityLabel("NanoLogic Splash Screen")
+                    .opacity(opacity)
+            }
+        }
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                withAnimation(.easeInOut(duration: 0.5)) {
+                    opacity = 0.0
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    isActive = true
+                }
+            }
+        }
+        .preferredColorScheme(.light)
+    }
+}
+
 extension Color {
     static let goldYellow = Color(red: 242/255, green: 176/255, blue: 30/255)
     static let strongRed = Color(red: 198/255, green: 40/255, blue: 40/255)
@@ -9,88 +44,203 @@ extension Color {
 }
 
 struct ContentView: View {
-    @Environment(\.openURL) private var openURL // Access openURL environment variable
-    
+    @Environment(\.openURL) private var openURL
+    @State private var showInfo: Bool = false
+    @State private var showSimulationWelcome: Bool = false
+    @State private var navigateToSimulation: Bool = false
+    @State private var pulse: Bool = false
+    @AppStorage("hasSeenSimulationWelcome") private var hasSeenSimulationWelcome: Bool = false
+
     var body: some View {
         NavigationStack {
             GeometryReader { geometry in
                 ZStack {
                     Color(.systemBackground)
                         .ignoresSafeArea()
-                    
-                    VStack(spacing: 12) {
+
+                    VStack(spacing: 0) {
                         Image("logo-nanotech-toolkit-high")
                             .resizable()
                             .scaledToFit()
-                            .frame(maxWidth: geometry.size.width * 0.6)
-                            .padding(.top, 50) // Note: You had 50 here, not 20 as in my previous response
+                            .frame(maxWidth: geometry.size.width * 0.9)
+                            .padding(.top, 50)
                             .frame(maxWidth: .infinity, alignment: .center)
                             .accessibilityLabel("Nanotech Toolkit Logo")
                             .onTapGesture {
-                                if let url = URL(string:"https://www.cda.cit.tum.de/research/nanotech/") { // Replace with your URL
+                                if let url = URL(string: "https://www.cda.cit.tum.de/research/nanotech/") {
                                     openURL(url)
                                 }
                             }
-                        
+
                         Spacer()
                             .frame(minHeight: 8, maxHeight: 20)
-                        
+
+                        let safeWidth = geometry.size.width
+                        let tileSize = (safeWidth > 0) ? max((safeWidth - 16 * 3) / 2, 120) : 120
+
                         LazyVGrid(
                             columns: [
-                                GridItem(.flexible(), spacing: 8),
-                                GridItem(.flexible(), spacing: 8)
+                                GridItem(.flexible(), spacing: 16),
+                                GridItem(.flexible(), spacing: 16)
                             ],
-                            alignment: .center,
-                            spacing: Gutter()
+                            spacing: 16
                         ) {
                             NavigationTile(
                                 iconName: "gearshape.fill",
                                 title: "Simulation",
                                 color: .goldYellow,
                                 destination: SimulationView(),
-                                size: min(geometry.size.width, geometry.size.height) * 0.45
+                                size: tileSize
                             )
+                            .onTapGesture {
+                                if !hasSeenSimulationWelcome {
+                                    showSimulationWelcome = true
+                                } else {
+                                    navigateToSimulation = true
+                                }
+                            }
+
                             NavigationTile(
                                 iconName: "puzzlepiece.fill",
                                 title: "Logic Design",
                                 color: .strongRed,
                                 destination: DesignView(fieldName: "Logic Design"),
-                                size: min(geometry.size.width, geometry.size.height) * 0.45
+                                size: tileSize
                             )
                             NavigationTile(
                                 iconName: "bolt.fill",
                                 title: "Circuit Design",
                                 color: .deepGreen,
                                 destination: CircuitView(),
-                                size: min(geometry.size.width, geometry.size.height) * 0.45
+                                size: tileSize
                             )
                             NavigationTile(
                                 iconName: "chart.bar.fill",
                                 title: "Analysis",
                                 color: .richPurple,
                                 destination: AnalysisView(),
-                                size: min(geometry.size.width, geometry.size.height) * 0.45
+                                size: tileSize
                             )
                         }
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 12)
-                        
+                        .padding(.horizontal, 16)
+                        .padding(.top, 16)
+
+                        Button(action: {
+                            withAnimation {
+                                showInfo.toggle()
+                            }
+                        }) {
+                            Image(systemName: "info.circle.fill")
+                                .font(.title)
+                                .foregroundColor(.white)
+                                .frame(width: 58, height: 58)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Color.blue)
+                                        .shadow(radius: 3)
+                                )
+                                .scaleEffect(pulse ? 1.05 : 1.0)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                        .padding(.top, 12)
+                        .padding(.trailing, 16)
+                        .onAppear {
+                            withAnimation(.easeInOut(duration: 1.0).repeatForever(autoreverses: true)) {
+                                pulse = true
+                            }
+                        }
+
                         Spacer()
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+                    // Custom right-aligned info panel overlay
+                    if showInfo {
+                        Color.black.opacity(0.4)
+                            .ignoresSafeArea()
+                            .onTapGesture {
+                                withAnimation {
+                                    showInfo = false
+                                }
+                            }
+
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("Silicon Dangling Bond Logic")
+                                .bold()
+                                .font(.title2)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+
+                            Image("sidb_tech")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(maxWidth: geometry.size.width * 0.8)
+                                .accessibilityLabel("Illustration of Silicon Substrate")
+
+                            Text("Silicon Dangling Bond Logic is an emerging technology that promises computation on the atomic level with unmatched energy efficiency. Silicon Dangling Bonds are on hydrogen-passivated silicon. With an atomically precise STM tip, hydrogen atoms can be removed, creating a dangling bond that can be charged positively, neutrally, or negatively depending on the electrostatic interaction. This allows for the design of bits, logic gates, and circuits at the atomic scale.")
+                                .font(.body)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+
+                            Button("Close") {
+                                withAnimation {
+                                    showInfo = false
+                                }
+                            }
+                            .font(.callout)
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 16)
+                            .background(Color.gray)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        .padding(20)
+                        .background(Color(.systemBackground))
+                        .cornerRadius(12)
+                        .frame(width: geometry.size.width * 0.9, height: geometry.size.height * 0.6)
+                        .shadow(radius: 10)
+                        .transition(.move(edge: .trailing))
+                        .zIndex(1)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                        .padding(.top, 80)
+                        .padding(.trailing, 20)
+                    }
+                }
+                .sheet(isPresented: $showSimulationWelcome) {
+                    VStack(alignment: .leading, spacing: 15) {
+                        Text("Welcome to the Simulation")
+                            .font(.title2)
+                            .bold()
+                            .padding(.bottom, 5)
+                        Text("This simulation visualizes the charge distribution of Silicon Dangling Bonds. Green dots represent negatively charged bonds, while transparent dots indicate neutral ones. Use the 'Simulate' button to explore different energy states. Note: This is a simplified model for educational purposes and may not reflect real-world conditions.")
+                            .font(.body)
+                        Button("Got It") {
+                            hasSeenSimulationWelcome = true
+                            showSimulationWelcome = false
+                            navigateToSimulation = true
+                        }
+                        .font(.callout)
+                        .padding(.vertical, 10)
+                        .padding(.horizontal, 20)
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.top, 10)
+                    }
+                    .padding()
+                    .frame(width: geometry.size.width * 0.9)
+                    .presentationDetents([.medium])
+                }
+                .navigationDestination(isPresented: $navigateToSimulation) {
+                    SimulationView()
                 }
             }
             .navigationBarHidden(true)
         }
-    }
-    
-    func Gutter() -> CGFloat {
-        return 8
+        .preferredColorScheme(.light)
     }
 }
 
-
-// Reusable NavigationTile view with customizable color
 struct NavigationTile<Destination: View>: View {
     let iconName: String
     let title: String
@@ -98,14 +248,13 @@ struct NavigationTile<Destination: View>: View {
     let destination: Destination
     let size: CGFloat
     
-    @State var isPressed = false // For tap animation
+    @State private var isPressed = false
     
     var body: some View {
         NavigationLink(destination: destination) {
             ZStack {
-                // Tile background
                 RoundedRectangle(cornerRadius: 12)
-                    .fill(color.opacity(0.15)) // Subtle background color
+                    .fill(color.opacity(0.15))
                     .frame(width: size, height: size)
                     .overlay(
                         RoundedRectangle(cornerRadius: 12)
@@ -113,31 +262,12 @@ struct NavigationTile<Destination: View>: View {
                     )
                     .shadow(radius: 3)
                 
-                // Optional gradient background (uncomment to use)
-                /*
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(
-                        LinearGradient(
-                            gradient: Gradient(colors: [color.opacity(0.2), color.opacity(0.05)]),
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .frame(width: size, height: size)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(color.opacity(0.3), lineWidth: 1)
-                    )
-                    .shadow(radius: 3)
-                */
-                
-                // Content: SF Symbol and Text
                 VStack(spacing: 8) {
                     Image(systemName: iconName)
                         .resizable()
                         .scaledToFit()
                         .frame(width: size * 0.3, height: size * 0.3)
-                        .foregroundColor(color) // Match icon to tile color
+                        .foregroundColor(color)
                     
                     Text(title)
                         .font(.system(size: size * 0.1, weight: .medium))
@@ -146,12 +276,12 @@ struct NavigationTile<Destination: View>: View {
                         .padding(.horizontal, 8)
                 }
             }
-            .contentShape(RoundedRectangle(cornerRadius: 12)) // Ensure entire tile is tappable
-            .scaleEffect(isPressed ? 0.95 : 1.0) // Tap animation
-            .animation(.easeInOut(duration: 0.2), value: isPressed)
-            .accessibilityLabel(title) // Accessibility
+            .contentShape(RoundedRectangle(cornerRadius: 12))
+            .scaleEffect(isPressed ? 0.99 : 1.0)
+            .animation(.spring(), value: isPressed)
+            .accessibilityLabel(title)
         }
-        .buttonStyle(PlainButtonStyle()) // Avoid default button styling
+        .buttonStyle(PlainButtonStyle())
         .simultaneousGesture(
             DragGesture(minimumDistance: 0)
                 .onChanged { _ in isPressed = true }
@@ -163,61 +293,85 @@ struct NavigationTile<Destination: View>: View {
 struct SimulationView: View {
     @State private var isSimulating: Bool = false
     @State private var simulationIndex: Double = 0
-    @State private var maxSimulationSteps: Double = 3 // Bilder 0-3, also 4 Bilder insgesamt
+    @State private var maxSimulationSteps: Double = 3
     @State private var currentLayoutImage: String = "neutral"
-    @State private var showInfo: Bool = false // Steuert das Anzeigen des Info-Popups
+    @State private var showInfo: Bool = false
+    @State private var pulseScale: CGFloat = 1.0
 
     var body: some View {
         GeometryReader { geometry in
             ScrollView {
                 VStack(spacing: 20) {
-                    // Title and Info Icon
                     ZStack {
-                        // Center the title
                         Text("Simulation")
                             .font(.largeTitle)
                             .dynamicTypeSize(.xLarge)
                         
-                        // Place the info button on the right
                         HStack {
                             Spacer()
                             Button(action: {
                                 showInfo = true
                             }) {
-                                Image(systemName: "info.circle")
-                                    .font(.title2)
-                                    .foregroundColor(.blue)
+                                Image(systemName: "info.circle.fill")
+                                    .font(.title)
+                                    .foregroundColor(.white)
+                                    .frame(width: 48, height: 48)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .fill(Color.blue)
+                                            .shadow(radius: 3)
+                                    )
+                                    .scaleEffect(pulseScale)
+                                    .animation(
+                                        .easeInOut(duration: 1.0)
+                                        .repeatForever(autoreverses: true),
+                                        value: pulseScale
+                                    )
+                                    .accessibilityLabel("Show simulation information")
+                                    .accessibilityHint("Tap to learn more about the physical simulation")
                             }
                             .popover(isPresented: $showInfo) {
                                 VStack(alignment: .leading, spacing: 10) {
-                                    Text("Physical Simulation").bold() +
-                                    Text(" predicts the charge distribution of the Silicon Dangling Bonds. Green dots indicate negatively charged Silicon Dangling Bonds, while transparent dots represent neutral ones. Press the button to run the simulation and explore charge distributions with varying energy values.")
+                                    Text("Physical Simulation")
+                                        .bold()
+                                        .font(.title2)
+                                        .lineLimit(1)
+                                        .minimumScaleFactor(0.8)
+                                    Text("predicts the charge distribution of the Silicon Dangling Bonds. Green dots indicate negatively charged Silicon Dangling Bonds, while transparent dots represent neutral ones. Press the button to run the simulation and explore charge distributions with varying energy values.")
                                     Button("Close") {
                                         showInfo = false
                                     }
+                                    .font(.callout)
+                                    .padding(.vertical, 8)
+                                    .padding(.horizontal, 16)
+                                    .background(Color.gray)
+                                    .foregroundColor(.white)
+                                    .cornerRadius(8)
                                     .frame(maxWidth: .infinity, alignment: .trailing)
                                     .padding(.top, 10)
-                                    .font(.callout)
                                 }
                                 .padding()
                                 .frame(width: geometry.size.width * 0.8)
                             }
                         }
+                        .padding(.trailing, 10)
                     }
                     .padding(.top, 20)
                     .padding(.horizontal)
-                    .padding(.top, 20)
-                    .padding(.horizontal)
+                    .onAppear {
+                        withAnimation(.easeInOut(duration: 0.4).repeatForever(autoreverses: true)) {
+                            pulseScale = 1.10
+                        }
+                        showInfo = true
+                    }
                     
-                    // Layout image
                     Image(currentLayoutImage)
                         .resizable()
                         .scaledToFit()
-                        .frame(width: geometry.size.width * 0.8) // Scale width, let height adjust
-                        .frame(maxWidth: .infinity, alignment: .center) // Center image
+                        .frame(width: geometry.size.width * 0.8)
+                        .frame(maxWidth: .infinity, alignment: .center)
                         .padding(.vertical, 10)
                     
-                    // Simulation controls
                     if !isSimulating {
                         Button(action: {
                             startSimulation()
@@ -231,7 +385,7 @@ struct SimulationView: View {
                                 .background(Color.blue)
                                 .cornerRadius(10)
                         }
-                        .frame(maxWidth: .infinity, alignment: .center) // Center button
+                        .frame(maxWidth: .infinity, alignment: .center)
                         .padding(.vertical)
                     } else {
                         VStack(spacing: 20) {
@@ -241,7 +395,7 @@ struct SimulationView: View {
                                 stateButton(index: 2, title: "2nd Excited", geometry: geometry)
                                 stateButton(index: 3, title: "3rd Excited", geometry: geometry)
                             }
-                            .frame(maxWidth: .infinity, alignment: .center) // Center HStack
+                            .frame(maxWidth: .infinity, alignment: .center)
                             
                             Button(action: {
                                 resetSimulation()
@@ -255,22 +409,22 @@ struct SimulationView: View {
                                     .background(Color.red)
                                     .cornerRadius(10)
                             }
-                            .frame(maxWidth: .infinity, alignment: .center) // Center button
+                            .frame(maxWidth: .infinity, alignment: .center)
                             .padding(.vertical)
                         }
                     }
                     
                     Spacer()
                 }
-                .frame(maxWidth: .infinity, alignment: .center) // Center entire VStack
-                .padding(.bottom, 20) // Extra padding for home indicator
+                .frame(maxWidth: .infinity, alignment: .center)
+                .padding(.bottom, 20)
             }
-            .ignoresSafeArea(.keyboard) // Prevent keyboard from pushing content
+            .ignoresSafeArea(.keyboard)
             .navigationBarTitleDisplayMode(.inline)
         }
+        .preferredColorScheme(.light)
     }
     
-    // Helper function for state buttons
     func stateButton(index: Int, title: String, geometry: GeometryProxy) -> some View {
         Button(action: {
             simulationIndex = Double(index)
@@ -314,6 +468,7 @@ struct CircuitView: View {
     @State var isComputing: Bool = false
     @State var computationProgress: CGFloat = 0
     @State private var showInfo: Bool = false
+    @State private var pulseScale: CGFloat = 1.0
 
     let circuits = ["mux21", "c17", "maj"]
 
@@ -335,7 +490,6 @@ struct CircuitView: View {
 
     var body: some View {
         VStack {
-            // Title and Info Icon
             ZStack {
                 Text("Circuit Design")
                     .font(.largeTitle)
@@ -343,19 +497,43 @@ struct CircuitView: View {
                 HStack {
                     Spacer()
                     Button(action: { showInfo = true }) {
-                        Image(systemName: "info.circle")
-                            .font(.title2)
-                            .foregroundColor(.blue)
+                        Image(systemName: "info.circle.fill")
+                            .font(.title)
+                            .foregroundColor(.white)
+                            .frame(width: 48, height: 48)
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(Color.blue)
+                                    .shadow(radius: 3)
+                            )
+                            .scaleEffect(pulseScale)
+                            .animation(
+                                .easeInOut(duration: 1.0)
+                                .repeatForever(autoreverses: true),
+                                value: pulseScale
+                            )
                             .accessibilityLabel("Show circuit design information")
+                            .accessibilityHint("Tap to learn more about circuit design")
                     }
                     .popover(isPresented: $showInfo) {
                         VStack(alignment: .leading, spacing: 10) {
-                            Text("Circuit Design").bold() +
-                                Text(" enables the design of circuits that account for atomic defects. The process begins by placing and routing a given logic gate-level layout onto a clocked surface. Standard cells are then designed \"on-the-fly\", integrating atomic defects from the surrounding environment. The result is a circuit that performs correctly despite real atomic-scale imperfections.")
-                            Button("Close") { showInfo = false }
-                                .frame(maxWidth: .infinity, alignment: .trailing)
-                                .padding(.top, 10)
-                                .font(.callout)
+                            Text("Circuit Design")
+                                .bold()
+                                .font(.title2)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.8)
+                            Text("enables the design of circuits that account for atomic defects. The process begins by placing and routing a given logic gate-level layout onto a clocked surface. Standard cells are then designed \"on-the-fly\", integrating atomic defects from the surrounding environment. The result is a circuit that performs correctly despite real atomic-scale imperfections.")
+                            Button("Close") {
+                                showInfo = false
+                            }
+                            .font(.callout)
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 16)
+                            .background(Color.gray)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                            .padding(.top, 10)
                         }
                         .padding()
                         .frame(width: UIScreen.main.bounds.width * 0.8)
@@ -366,8 +544,13 @@ struct CircuitView: View {
             .padding(.top, 20)
             .padding(.horizontal)
             .frame(maxWidth: .infinity, alignment: .center)
+            .onAppear {
+                withAnimation(.easeInOut(duration: 0.4).repeatForever(autoreverses: true)) {
+                    pulseScale = 1.10
+                }
+                showInfo = true
+            }
 
-            // Circuit Selection Buttons
             HStack(spacing: Gutter()) {
                 ForEach(circuits, id: \.self) { circuit in
                     Button(action: {
@@ -395,7 +578,7 @@ struct CircuitView: View {
             GeometryReader { geometry in
                 ZStack {
                     if let imageName = currentImage, !isComputing {
-                        let imageSize = min(geometry.size.width, geometry.size.height) * 1.0 // Increased size
+                        let imageSize = min(geometry.size.width, geometry.size.height) * 1.0
                         Image(imageName)
                             .resizable()
                             .scaledToFit()
@@ -427,7 +610,6 @@ struct CircuitView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             }
 
-            // Button
             VStack {
                 Button(action: { startComputation() }) {
                     Text(buttonLabel)
@@ -513,7 +695,8 @@ struct DesignView: View {
     var fieldName: String
     @State private var selectedInput: Int = 0
     @State private var stage: Stage = .initial
-    @State private var showInfo: Bool = false // Controls the info popover
+    @State private var showInfo: Bool = false
+    @State private var pulseScale: CGFloat = 1.0
 
     let binaryLabels = ["00", "01", "10", "11"]
     
@@ -542,53 +725,76 @@ struct DesignView: View {
         GeometryReader { geometry in
             ScrollView {
                 VStack(spacing: 20) {
-                    // Title and Info Icon
                     ZStack {
-                        // Center the title
                         Text("Logic Design")
                             .font(.largeTitle)
                             .dynamicTypeSize(.xLarge)
                         
-                        // Place the info button on the right
                         HStack {
                             Spacer()
                             Button(action: {
                                 showInfo = true
                             }) {
-                                Image(systemName: "info.circle")
-                                    .font(.title2)
-                                    .foregroundColor(.blue)
+                                Image(systemName: "info.circle.fill")
+                                    .font(.title)
+                                    .foregroundColor(.white)
+                                    .frame(width: 48, height: 48)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 12)
+                                        .fill(Color.blue)
+                                        .shadow(radius: 3)
+                                    )
+                                    .scaleEffect(pulseScale)
+                                    .animation(
+                                        .easeInOut(duration: 1.0)
+                                        .repeatForever(autoreverses: true),
+                                        value: pulseScale
+                                    )
                                     .accessibilityLabel("Show logic design information")
+                                    .accessibilityHint("Tap to learn more about logic design")
                             }
                             .popover(isPresented: $showInfo) {
                                 VStack(alignment: .leading, spacing: 10) {
-                                    Text("Logic Design").bold() +
-                                    Text(" creates standard cells by placing Silicon Dangling Bonds between input and output wires. The algorithm positions the Silicon Dangling Bonds to satisfy the given Boolean function for all input patterns. The design is validated through physical simulation to ensure the correct charge distribution.")
+                                    Text("Logic Design")
+                                        .bold()
+                                        .font(.title2)
+                                        .lineLimit(1)
+                                        .minimumScaleFactor(0.8)
+                                    Text("creates standard cells by placing Silicon Dangling Bonds between input and output wires. The algorithm positions the Silicon Dangling Bonds to satisfy the given Boolean function for all input patterns. The design is validated through physical simulation to ensure the correct charge distribution.")
                                     Button("Close") {
                                         showInfo = false
                                     }
+                                    .font(.callout)
+                                    .padding(.vertical, 8)
+                                    .padding(.horizontal, 16)
+                                    .background(Color.gray)
+                                    .foregroundColor(.white)
+                                    .cornerRadius(8)
                                     .frame(maxWidth: .infinity, alignment: .trailing)
                                     .padding(.top, 10)
-                                    .font(.callout)
                                 }
                                 .padding()
                                 .frame(width: geometry.size.width * 0.8)
                             }
                         }
-                        .padding(.trailing, 10) // Add padding to avoid overlap
+                        .padding(.trailing, 10)
                     }
                     .padding(.top, 20)
                     .padding(.horizontal)
+                    .onAppear {
+                        withAnimation(.easeInOut(duration: 0.4).repeatForever(autoreverses: true)) {
+                            pulseScale = 1.10
+                        }
+                        showInfo = true
+                    }
                     
-                    // Image display
                     Image(currentImage)
                         .resizable()
                         .scaledToFit()
                         .frame(width: geometry.size.width * 0.9)
-                        .frame(maxWidth: .infinity, alignment: .center) // Center image
+                        .frame(maxWidth: .infinity, alignment: .center)
                         .padding(.vertical, 10)
                     
-                    // Controls based on stage
                     switch stage {
                     case .initial:
                         Button(action: {
@@ -609,7 +815,7 @@ struct DesignView: View {
                                         .stroke(Color.white, lineWidth: 2)
                                 )
                         }
-                        .frame(maxWidth: .infinity, alignment: .center) // Center button
+                        .frame(maxWidth: .infinity, alignment: .center)
                         .padding(.vertical)
                         .accessibilityLabel("Design AND gate")
                         
@@ -628,7 +834,7 @@ struct DesignView: View {
                                 .background(Color.blue)
                                 .cornerRadius(10)
                         }
-                        .frame(maxWidth: .infinity, alignment: .center) // Center button
+                        .frame(maxWidth: .infinity, alignment: .center)
                         .padding(.vertical)
                         
                     case .simulated:
@@ -655,7 +861,7 @@ struct DesignView: View {
                                     }
                                 }
                             }
-                            .frame(maxWidth: .infinity, alignment: .center) // Center HStack
+                            .frame(maxWidth: .infinity, alignment: .center)
                             
                             Text("AND Output: \(andOutput)")
                                 .font(.subheadline)
@@ -668,25 +874,26 @@ struct DesignView: View {
                     
                     Spacer()
                 }
-                .frame(maxWidth: .infinity, alignment: .center) // Center entire VStack
-                .padding(.bottom, 20) // Extra padding for home indicator
+                .frame(maxWidth: .infinity, alignment: .center)
+                .padding(.bottom, 20)
             }
             .ignoresSafeArea(.keyboard)
             .navigationBarTitleDisplayMode(.inline)
         }
+        .preferredColorScheme(.light)
     }
 }
 
 struct VideoPlayerView: View {
     var videoName: String
     @Binding var player: AVPlayer?
-    var width: CGFloat = 600 // Default width
-    var height: CGFloat = 450 // Default height
+    var width: CGFloat = 600
+    var height: CGFloat = 450
     
     var body: some View {
         if let url = Bundle.main.url(forResource: videoName, withExtension: "mp4") {
             VideoPlayer(player: player ?? AVPlayer(url: url))
-                .frame(width: width, height: height) // Use external dimensions
+                .frame(width: width, height: height)
                 .background(Color.black.opacity(0))
                 .cornerRadius(10)
                 .padding()
@@ -705,51 +912,76 @@ struct VideoPlayerView: View {
 
 struct AnalysisView: View {
     @State var selectedDomain: String = "Temperature Domain"
-    @State private var showInfo: Bool = false // Controls the info popover
+    @State private var showInfo: Bool = false
+    @State private var pulseScale: CGFloat = 1.0
     
     var body: some View {
         GeometryReader { geometry in
             ScrollView {
                 VStack(spacing: 20) {
-                    // Title and Info Icon
                     ZStack {
-                        // Center the title
                         Text("Analysis")
                             .font(.largeTitle)
                             .dynamicTypeSize(.xLarge)
                         
-                        // Place the info button on the right
                         HStack {
                             Spacer()
                             Button(action: {
                                 showInfo = true
                             }) {
-                                Image(systemName: "info.circle")
-                                    .font(.title2)
-                                    .foregroundColor(.blue)
+                                Image(systemName: "info.circle.fill")
+                                    .font(.title)
+                                    .foregroundColor(.white)
+                                    .frame(width: 48, height: 48)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .fill(Color.blue)
+                                            .shadow(radius: 3)
+                                    )
+                                    .scaleEffect(pulseScale)
+                                    .animation(
+                                        .easeInOut(duration: 1.0)
+                                        .repeatForever(autoreverses: true),
+                                        value: pulseScale
+                                    )
                                     .accessibilityLabel("Show analysis information")
+                                    .accessibilityHint("Tap to learn more about analysis")
                             }
                             .popover(isPresented: $showInfo) {
                                 VStack(alignment: .leading, spacing: 10) {
-                                    Text("Analysis").bold() +
-                                    Text(" evaluates the performance of Silicon Dangling Bond logic under varying conditions. Temperature simulation examines the impact of thermal variations, while Operational Domain Analysis assesses robustness against material imperfections. These evaluation tools help optimize designs for real-world reliability.")
+                                    Text("Analysis")
+                                        .bold()
+                                        .font(.title2)
+                                        .lineLimit(1)
+                                        .minimumScaleFactor(0.8)
+                                    Text("evaluates the performance of Silicon Dangling Bond logic under varying conditions. Temperature simulation examines the impact of thermal variations, while Operational Domain Analysis assesses robustness against material imperfections. These evaluation tools help optimize designs for real-world reliability.")
                                     Button("Close") {
                                         showInfo = false
                                     }
+                                    .font(.callout)
+                                    .padding(.vertical, 8)
+                                    .padding(.horizontal, 16)
+                                    .background(Color.gray)
+                                    .foregroundColor(.white)
+                                    .cornerRadius(8)
                                     .frame(maxWidth: .infinity, alignment: .trailing)
                                     .padding(.top, 10)
-                                    .font(.callout)
                                 }
                                 .padding()
                                 .frame(width: geometry.size.width * 0.8)
                             }
                         }
-                        .padding(.trailing, 10) // Add padding to avoid overlap
+                        .padding(.trailing, 10)
                     }
                     .padding(.top, 20)
                     .padding(.horizontal)
+                    .onAppear {
+                        withAnimation(.easeInOut(duration: 0.4).repeatForever(autoreverses: true)) {
+                            pulseScale = 1.10
+                        }
+                        showInfo = true
+                    }
                     
-                    // Domain Picker
                     Picker("Select Domain", selection: $selectedDomain) {
                         Text("Temperature").tag("Temperature Domain")
                         Text("Operational").tag("Operational Domain")
@@ -758,7 +990,6 @@ struct AnalysisView: View {
                     .frame(maxWidth: geometry.size.width * 0.9)
                     .padding(.horizontal)
                     
-                    // Conditional Content
                     Group {
                         if selectedDomain == "Temperature Domain" {
                             TemperatureView()
@@ -770,14 +1001,14 @@ struct AnalysisView: View {
                     
                     Spacer()
                 }
-                .padding(.bottom, 20) // Extra padding for home indicator
+                .padding(.bottom, 20)
             }
             .ignoresSafeArea(.keyboard)
             .navigationBarTitleDisplayMode(.inline)
         }
+        .preferredColorScheme(.light)
     }
 }
-
 
 struct OperationalDomainView: View {
     @State var gridSearchPlayer: AVPlayer?
@@ -789,9 +1020,9 @@ struct OperationalDomainView: View {
     @State var isFloodFillPlaying = false
     @State var isContourPlaying = false
     @State var selectedVideo: String = "Grid Search"
-    @State var epsilonR: Double = 5.5 // Default epsilon_r
-    @State var lambdaTF: Double = 5.0 // Default lambda_tf
-    @State var selectedSection: Section = .parameters // Default to parameter selection
+    @State var epsilonR: Double = 5.5
+    @State var lambdaTF: Double = 5.0
+    @State var selectedSection: Section = .parameters
     let playbackSpeed: Float = 200.0
     
     enum Section: String, CaseIterable, Identifiable {
@@ -818,6 +1049,7 @@ struct OperationalDomainView: View {
         }
         .onAppear(perform: initializePlayers)
         .onDisappear(perform: stopAllPlayers)
+        .preferredColorScheme(.light)
     }
     
     var headerView: some View {
@@ -834,49 +1066,82 @@ struct OperationalDomainView: View {
         }
         .pickerStyle(SegmentedPickerStyle())
     }
-    
+
     var parameterSelectionSection: some View {
-        GeometryReader { geometry in
-            VStack(spacing: 15) {
-                // SVG Image with increased size and dynamic scaling
-                if let svgName = svgFileName {
-                    Image(svgName)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(maxWidth: max(geometry.size.width * 0.9, 600)) // Ensure minimum size on larger devices
-                        .padding(.horizontal)
-                        .accessibilityLabel("Charge distribution for ε_r \(String(format: "%.1f", epsilonR)) and λ_tf \(String(format: "%.1f", lambdaTF))")
-                } else {
-                    Text("No matching PNG found")
-                        .font(.subheadline)
-                        .foregroundColor(.red)
-                }
-                
-                // Sliders with responsive width
-                VStack(spacing: 10) {
-                    // Lambda TF Slider and Text
-                    VStack(spacing: 8) {
-                        Slider(value: $lambdaTF, in: 1.0...10.0, step: 0.5)
-                            .frame(width: geometry.size.width * 0.8) // Responsive width
-                            .tint(.blue)
-                        Text("λ\(Text("tf").font(.footnote).baselineOffset(-5)): \(String(format: "%.1f", lambdaTF))")
+        let isWideScreen = UIScreen.main.bounds.width > 700
+        
+        return Group {
+            if isWideScreen {
+                // iPad or wide screen layout
+                HStack(alignment: .center, spacing: 40) {
+                    if let svgName = svgFileName {
+                        Image(svgName)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(maxWidth: 400, maxHeight: 400)
+                            .accessibilityLabel("Charge distribution for ε_r \(String(format: "%.1f", epsilonR)) and λ_tf \(String(format: "%.1f", lambdaTF))")
+                    } else {
+                        Text("No matching PNG found")
                             .font(.subheadline)
+                            .foregroundColor(.red)
                     }
-                    
-                    // Epsilon R Slider and Text
-                    VStack(spacing: 8) {
-                        Slider(value: $epsilonR, in: 1.0...10.0, step: 0.5)
-                            .frame(width: geometry.size.width * 0.8)
-                            .tint(.blue)
-                        Text("ε\(Text("r").font(.footnote).baselineOffset(-5)): \(String(format: "%.1f", epsilonR))")
-                            .font(.subheadline)
+
+                    VStack(spacing: 20) {
+                        VStack(spacing: 8) {
+                            Slider(value: $lambdaTF, in: 1.0...10.0, step: 0.5)
+                                .tint(.blue)
+                                .frame(width: 300)
+                            Text("λ\(Text("tf").font(.footnote).baselineOffset(-5)): \(String(format: "%.1f", lambdaTF))")
+                                .font(.subheadline)
+                        }
+
+                        VStack(spacing: 8) {
+                            Slider(value: $epsilonR, in: 1.0...10.0, step: 0.5)
+                                .tint(.blue)
+                                .frame(width: 300)
+                            Text("ε\(Text("r").font(.footnote).baselineOffset(-5)): \(String(format: "%.1f", epsilonR))")
+                                .font(.subheadline)
+                        }
                     }
                 }
-                .padding(.horizontal, geometry.size.width * 0.1) // Dynamic padding
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 40)
+            } else {
+                // iPhone or narrow layout
+                VStack(spacing: 30) {
+                    if let svgName = svgFileName {
+                        Image(svgName)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(maxWidth: 300, maxHeight: 300)
+                            .accessibilityLabel("Charge distribution for ε_r \(String(format: "%.1f", epsilonR)) and λ_tf \(String(format: "%.1f", lambdaTF))")
+                    } else {
+                        Text("No matching PNG found")
+                            .font(.subheadline)
+                            .foregroundColor(.red)
+                    }
+
+                    VStack(spacing: 20) {
+                        VStack(spacing: 6) {
+                            Slider(value: $lambdaTF, in: 1.0...10.0, step: 0.5)
+                                .tint(.blue)
+                            Text("λ\(Text("tf").font(.footnote).baselineOffset(-5)): \(String(format: "%.1f", lambdaTF))")
+                                .font(.subheadline)
+                        }
+
+                        VStack(spacing: 6) {
+                            Slider(value: $epsilonR, in: 1.0...10.0, step: 0.5)
+                                .tint(.blue)
+                            Text("ε\(Text("r").font(.footnote).baselineOffset(-5)): \(String(format: "%.1f", epsilonR))")
+                                .font(.subheadline)
+                        }
+                    }
+                    .padding(.horizontal)
+                }
+                .padding(.vertical)
             }
-            .padding(.vertical, 10)
         }
-        .frame(minHeight: 500) // Ensure enough space for the plot and sliders
+        .frame(maxWidth: .infinity)
     }
 
     var algorithmSimulationSection: some View {
@@ -953,7 +1218,10 @@ struct OperationalDomainView: View {
     @ViewBuilder
     func playPauseButton(player: Binding<AVPlayer?>, isPlaying: Binding<Bool>, videoName: String) -> some View {
         Button(action: {
-            guard let player = player.wrappedValue else { print("No player for \(videoName)"); return }
+            guard let player = player.wrappedValue else {
+                print("No player for \(videoName)")
+                return
+            }
             if isPlaying.wrappedValue {
                 player.pause()
             } else {
@@ -971,9 +1239,12 @@ struct OperationalDomainView: View {
     }
     
     @ViewBuilder
-     func repeatButton(player: Binding<AVPlayer?>, isPlaying: Binding<Bool>, videoName: String) -> some View {
+    func repeatButton(player: Binding<AVPlayer?>, isPlaying: Binding<Bool>, videoName: String) -> some View {
         Button(action: {
-            guard let player = player.wrappedValue else { print("No player for \(videoName)"); return }
+            guard let player = player.wrappedValue else {
+                print("No player for \(videoName)")
+                return
+            }
             player.seek(to: .zero)
             player.play()
             player.rate = playbackSpeed
@@ -987,7 +1258,7 @@ struct OperationalDomainView: View {
         }
     }
     
-     func initializePlayers() {
+    func initializePlayers() {
         if let gridSearchURL = Bundle.main.url(forResource: "grid", withExtension: "mp4") {
             gridSearchPlayer = AVPlayer(url: gridSearchURL)
         }
@@ -1002,7 +1273,7 @@ struct OperationalDomainView: View {
         }
     }
     
-     func stopAllPlayers() {
+    func stopAllPlayers() {
         gridSearchPlayer?.pause()
         randomPlayer?.pause()
         floodFillPlayer?.pause()
@@ -1013,7 +1284,6 @@ struct OperationalDomainView: View {
         isContourPlaying = false
     }
 }
-
 
 struct TemperatureView: View {
     @State var temperature: Double = 1
@@ -1035,19 +1305,16 @@ struct TemperatureView: View {
                     .font(.title)
                     .padding(.top, 10)
                 
-                // Slider Section
                 sliderSection
                 
-                // Picker
                 Picker("Select Image", selection: $selectedImage) {
                     ForEach(ImageSelection.allCases) { option in
                         Text(option.rawValue).tag(option)
                     }
                 }
-                .pickerStyle(SegmentedPickerStyle())
+                .pickerStyle(.segmented)
                 .padding(.horizontal)
                 
-                // Image Display
                 imageSection
                 
                 Spacer(minLength: 20)
@@ -1057,23 +1324,22 @@ struct TemperatureView: View {
         .onAppear {
             updateImages(forTemperature: Int(temperature))
         }
+        .preferredColorScheme(.light)
     }
     
     var sliderSection: some View {
         GeometryReader { geometry in
             VStack(spacing: 10) {
-                ZStack(alignment: .center) { // Center alignment for thumb
-                    // Gradient background for slider track
+                ZStack(alignment: .center) {
                     LinearGradient(
                         gradient: Gradient(colors: [.blue, .green, .yellow, .orange, .red]),
                         startPoint: .leading,
                         endPoint: .trailing
                     )
                     .cornerRadius(7.5)
-                    .frame(height: 10) // Reduced height for a sleeker look
-                    .padding(.horizontal, 5) // Padding to align with slider thumb
+                    .frame(height: 10)
+                    .padding(.horizontal, 5)
 
-                    // Slider control
                     Slider(value: Binding(
                         get: { self.temperature },
                         set: { newValue in
@@ -1081,17 +1347,17 @@ struct TemperatureView: View {
                             self.updateImages(forTemperature: Int(newValue))
                         }
                     ), in: 1...400, step: 5)
-                    .tint(.white.opacity(0.8)) // White thumb for contrast
-                    .frame(width: geometry.size.width * 0.8) // Dynamic width
+                    .tint(.white.opacity(0.8))
+                    .frame(width: geometry.size.width * 0.8)
                 }
 
                 Text("Temperature: \(Int(temperature)) K")
-                    .font(.subheadline) // Match button font for consistency
+                    .font(.subheadline)
                     .padding(.vertical, 5)
             }
-            .padding(.horizontal, geometry.size.width * 0.1) // Dynamic padding
+            .padding(.horizontal, geometry.size.width * 0.1)
         }
-        .frame(height: 60) // Reserve space for slider and text
+        .frame(height: 60)
     }
     
     var imageSection: some View {
@@ -1105,18 +1371,14 @@ struct TemperatureView: View {
         .padding(.top, 20)
     }
     
-    func singleImageView(name: String, title: String? = nil, size: CGFloat) -> some View {
+    func singleImageView(name: String, size: CGFloat) -> some View {
         VStack(spacing: 5) {
-            if let title = title {
-                Text(title)
-                    .font(.headline)
-            }
-            
             Image(name)
                 .resizable()
                 .scaledToFit()
                 .frame(maxWidth: size, maxHeight: size)
                 .padding(.vertical, 5)
+                .accessibilityLabel("Image of \(selectedImage.rawValue) at temperature \(Int(temperature)) K")
         }
     }
     
@@ -1125,21 +1387,15 @@ struct TemperatureView: View {
         nandImageName = "nand_\(temp)"
     }
     
-    // MARK: - Responsive Layout Helpers
-    
-    // Check if we're on a compact device (iPhone or smaller iPad)
     var isCompact: Bool {
         horizontalSizeClass == .compact
     }
     
-    // Size for single image display
     var imageSize: CGFloat {
         isCompact ? 300 : 500
     }
 }
 
-
-// Preview
 #Preview {
     ContentView()
 }
