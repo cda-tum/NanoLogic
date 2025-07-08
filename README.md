@@ -1,4 +1,4 @@
-# 📱NanoLogic
+# 📱NanoLogic: An Educational App for Atomic-Scale Computing
 
 [![Swift](https://img.shields.io/badge/Swift-5.8-orange.svg?style=flat&logo=swift)](https://swift.org)
 [![Xcode](https://img.shields.io/badge/Xcode-16.3-blue.svg?style=flat&logo=xcode)](https://developer.apple.com/xcode/)
