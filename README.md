@@ -1,4 +1,4 @@
-# 📱NanoLogic: An Educational App for Atomic-Scale Computing
+## 📱NanoLogic: An Educational App for Atomic-Scale Computing
 
 [![Swift](https://img.shields.io/badge/Swift-5.8-orange.svg?style=flat&logo=swift)](https://swift.org)
 [![Xcode](https://img.shields.io/badge/Xcode-16.3-blue.svg?style=flat&logo=xcode)](https://developer.apple.com/xcode/)
@@ -30,7 +30,7 @@ NanoLogic is available for download on the [Apple App Store](https://apps.apple.
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/Drewniok/NanoLogic.git
+   git clone https://github.com/cda-tum/NanoLogic.git
 2. Open `NanoLogic.xcodeproj` in Xcode 16.3 or newer.
 3. Select your target device or simulator.
 4. Build and run the app.
