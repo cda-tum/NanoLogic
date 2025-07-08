@@ -6,7 +6,6 @@
 
 <img src="resources/demo_video/demo.gif" alt="Mode Demo" class="dark-mode-img" alt="overview" align="right" width="200" />
 
-
 NanoLogic is an iOS app designed to deepen your understanding of atomic-scale computing, with a focus on Silicon Dangling Bonds (SiDBs). The app is divided into four main sections, each exploring a unique aspect of the SiDB technology:
 
 1. **Simulation:** Explore the physical simulation of Silicon Dangling Bonds to understand their behavior and properties.
@@ -14,6 +13,9 @@ NanoLogic is an iOS app designed to deepen your understanding of atomic-scale co
 3. **Analysis:** Analyze the designed gates and evaluate their performance.
 4. **Circuit Design:** Build and test circuits based on SiDBs, considering the impact of defects.
 
+## 📥 Get NanoLogic
+
+NanoLogic is available for download on the [Apple App Store](https://apps.apple.com/de/app/nanologic/id6745813509). Install it on your iPhone or iPad to start exploring atomic-scale computing with Silicon Dangling Bonds!
 
 ## 🚀 Features
 
@@ -24,7 +26,7 @@ NanoLogic is an iOS app designed to deepen your understanding of atomic-scale co
 - Modern Swift 5.8 codebase, built with Xcode 16.3
 - Continuous integration for iOS builds
 
-## 📲 Installation
+## 📲 Installation (For Developers)
 
 1. Clone the repository:
    ```sh
@@ -35,8 +37,8 @@ NanoLogic is an iOS app designed to deepen your understanding of atomic-scale co
 
 ## 🛠️ Requirements
 
-- macOS with Xcode 16.3+
-- iOS 15.0+ device or simulator
+* macOS with Xcode 16.3+
+* iOS 15.0+ device or simulator
 
 ## 🤝 Contributing
 
